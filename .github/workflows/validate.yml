@@ -2,7 +2,7 @@ name: Validate
 
 on:
   push:
-    branches: [master, cursor/agent-board-v1-b57c]
+    branches: [master]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
@@ -39,7 +39,7 @@ jobs:
     if: >-
       (github.event_name != 'pull_request' || github.event.pull_request.draft == false) &&
       !(github.event_name == 'pull_request' && github.head_ref == 'tegami/version-packages' && github.event.pull_request.user.login == 'solzero-bot[bot]') &&
-      (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/cursor/agent-board-v1-b57c') || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Version Packages') && github.event.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com'))
+      (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Version Packages') && github.event.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com'))
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 30
     steps:
@@ -83,7 +83,7 @@ jobs:
     if: >-
       (github.event_name != 'pull_request' || github.event.pull_request.draft == false) &&
       !(github.event_name == 'pull_request' && github.head_ref == 'tegami/version-packages' && github.event.pull_request.user.login == 'solzero-bot[bot]') &&
-      (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/cursor/agent-board-v1-b57c') || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Version Packages') && github.event.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com')) &&
+      (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Version Packages') && github.event.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com')) &&
       (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 45
