@@ -91,12 +91,12 @@ jobs:
           GITHUB_TOKEN: ${{ steps.release-token.outputs.token }}
           RELEASE_COMMIT: ${{ startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && github.event.workflow_run.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com' }}
 
-  # The only publish job. Pin a trusted publisher to this file later:
-  # .github/workflows/release.yml
+  # Confirmed publish contract. The trusted publisher has no workflow file,
+  # so any workflow on master can publish. This is the only publish job.
+  # registry-url: https://alchemy.new (api.alchemy.new does not serve the API)
   # OIDC audience: https://alchemy.new/registry/publish
   # OIDC issuer: https://token.actions.githubusercontent.com
-  # Exchange: POST /v1/oidc/github/exchange
-  # registry-url https://alchemy.new is set explicitly and is not confirmed as the live host.
+  # Exchange: POST https://alchemy.new/v1/oidc/github/exchange
   publish:
     name: Publish to alchemy.new
     needs: release

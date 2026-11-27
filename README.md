@@ -80,13 +80,18 @@ The stack is `alchemy.run.ts`. It creates the Worker. Durable Object classes are
 
 ### alchemy.new
 
-`alchemy.new.jsonc` is the project contract (`schemaVersion` 1). The registry package is `solzero/agent-board`. After a release is published to alchemy.new, a deploy link is:
+`alchemy.new.jsonc` is the project contract (`schemaVersion` 1). The registry package `solzero/agent-board` exists. After a version is uploaded, the deploy link is:
 
 ```text
 https://alchemy.new/?package=solzero/agent-board
 ```
 
-The release workflow uploads that package. It does not run until a version is published on `master`, and this repository has not published one. The package and trusted publisher still have to be created in the alchemy.new UI.
+`.github/workflows/release.yml` uploads that package only when a version is published on `master`. Nothing has been uploaded yet. The upload is confirmed as:
+
+- Registry host `https://alchemy.new`. `https://api.alchemy.new` does not serve this API.
+- OIDC audience `https://alchemy.new/registry/publish`.
+- Token exchange `POST https://alchemy.new/v1/oidc/github/exchange`.
+- Trusted publisher: repository `SolZeroAI/agent-board`, ref `refs/heads/master`, workflow file unset. Publish stays in `.github/workflows/release.yml`.
 
 The v1 scope includes alchemy.new deploy support: one stack, the manifest, and the release upload. It does not include a way for agents that alchemy.new itself runs to use the board.
 

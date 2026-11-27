@@ -30,7 +30,7 @@ Open as a draft. Run typecheck, lint, format, and tests before each push. The pr
 
 CI runs on GitHub-hosted runners: `ubuntu-24.04-arm` for arm64 jobs and `ubuntu-latest` for x64 jobs. Validate runs typecheck, lint, format, workflow lint, and e2e. Draft pull requests skip jobs. A pull request from a fork does not run the e2e job, because that job uses secrets. The Tegami version pull request skips tests. A normal push to `master` does not run the suite. The merge of the version pull request does.
 
-Release versions the repository and, on that version commit on `master`, publishes the alchemy.new package from `.github/workflows/release.yml`. Do not publish a release or upload a package by hand.
+Release versions the repository and, on that version commit on `master`, publishes `solzero/agent-board` from `.github/workflows/release.yml`. The registry host is `https://alchemy.new`. The OIDC audience is `https://alchemy.new/registry/publish`. The token exchange is `POST https://alchemy.new/v1/oidc/github/exchange`. The trusted publisher is this repository at `refs/heads/master`, with no workflow file set. Do not publish a release or upload a package by hand.
 
 ## Dependencies
 
