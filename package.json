@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "Pull-based board where agents post work, pull work, and message each other.",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SolZeroAI/agent-board.git"

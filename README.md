@@ -66,7 +66,7 @@ nub packages/cli/src/main.ts api claim-next --target "<boardId>" --lease-ms 6000
 
 ## Deploy
 
-CI runs on GitHub-hosted runners (`ubuntu-24.04-arm` and `ubuntu-latest`). Do not deploy from this repository's CI until the release and the alchemy.new package exist. A deploy uses the visitor's Cloudflare account. No production deploy is part of local development.
+CI runs on GitHub-hosted runners (`ubuntu-24.04-arm` and `ubuntu-latest`). The e2e job uses the org secrets `CLOUDFLARE_ACCOUNT_ID` and `CF_AI_GATEWAY_E2E_TOKEN`, and the org variables `E2E_DECISION_MODEL` and `E2E_LANGUAGE_MODEL`. It does not use `CLOUDFLARE_API_TOKEN`. The local stack does not receive those values. Release uses `RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`. The publish job uses the `alchemy-new` environment. Do not deploy from this repository's CI. A deploy uses the visitor's Cloudflare account. No production deploy is part of local development.
 
 ### Standard
 
@@ -91,7 +91,7 @@ https://alchemy.new/?package=solzero/agent-board
 - Registry host `https://alchemy.new`. `https://api.alchemy.new` does not serve this API.
 - OIDC audience `https://alchemy.new/registry/publish`.
 - Token exchange `POST https://alchemy.new/v1/oidc/github/exchange`.
-- Trusted publisher: repository `SolZeroAI/agent-board`, ref `refs/heads/master`, workflow file unset. Publish stays in `.github/workflows/release.yml`.
+- Trusted publisher: repository `SolZeroAI/agent-board`, ref `refs/heads/master`, workflow file unset. The publish job runs in the `alchemy-new` GitHub environment. Publish stays in `.github/workflows/release.yml`.
 
 The v1 scope includes alchemy.new deploy support: one stack, the manifest, and the release upload. It does not include a way for agents that alchemy.new itself runs to use the board.
 
@@ -132,4 +132,4 @@ Not in v1: a hosted production deploy, and two-way sync with Slack, GitHub, or L
 
 ## License
 
-TODO: the license is pending a decision. This repository does not include a license file yet.
+[AGPL-3.0](LICENSE).

@@ -87,6 +87,12 @@ jobs:
       (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 45
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_AI_GATEWAY_E2E_TOKEN: ${{ secrets.CF_AI_GATEWAY_E2E_TOKEN }}
+      E2E_DECISION_MODEL: ${{ vars.E2E_DECISION_MODEL }}
+      E2E_LANGUAGE_MODEL: ${{ vars.E2E_LANGUAGE_MODEL }}
+      E2E_TELEMETRY_DISABLED: "1"
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -131,11 +137,4 @@ jobs:
             nub run test:e2e:cache-strict
           fi
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_AI_GATEWAY_E2E_TOKEN: ${{ secrets.CF_AI_GATEWAY_E2E_TOKEN }}
-          CF_AI_GATEWAY_E2E_ID: ${{ vars.CF_AI_GATEWAY_E2E_ID }}
-          E2E_DECISION_MODEL: ${{ vars.E2E_DECISION_MODEL }}
-          E2E_LANGUAGE_MODEL: ${{ vars.E2E_LANGUAGE_MODEL }}
-          E2E_TELEMETRY_DISABLED: "1"
           GITHUB_TOKEN: ${{ github.token }}

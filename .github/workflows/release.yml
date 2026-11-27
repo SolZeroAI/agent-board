@@ -26,7 +26,6 @@ jobs:
       (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
-    environment: release
     permissions:
       contents: read
     outputs:
@@ -93,6 +92,7 @@ jobs:
 
   # Confirmed publish contract. The trusted publisher has no workflow file,
   # so any workflow on master can publish. This is the only publish job.
+  # It uses the alchemy-new environment, the same as solstatus.
   # registry-url: https://alchemy.new (api.alchemy.new does not serve the API)
   # OIDC audience: https://alchemy.new/registry/publish
   # OIDC issuer: https://token.actions.githubusercontent.com
@@ -110,6 +110,7 @@ jobs:
       needs.release.result == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    environment: alchemy-new
     permissions:
       contents: read
       id-token: write

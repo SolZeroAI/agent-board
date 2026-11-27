@@ -5,6 +5,8 @@ import type { E2EConfig } from "e2e";
 
 import { e2eModels } from "./scripts/e2e/models.ts";
 
+// The suite calls the account's default AI Gateway with CF_AI_GATEWAY_E2E_TOKEN.
+// Placeholders let secret-free test collection load this module.
 const { decisionModel, languageModel } = e2eModels({
   accountId: process.env.CLOUDFLARE_ACCOUNT_ID || "unconfigured",
   gatewayId: process.env.CF_AI_GATEWAY_E2E_ID || "default",
@@ -24,6 +26,11 @@ export default {
         command: {
           executable: "nub",
           args: ["run", "dev"],
+          // Local emulation. The child does not inherit a Cloudflare API token or account id.
+          env: {
+            CI: "1",
+            ALCHEMY_STAGE: "dev",
+          },
           startupTimeout: 180_000,
           shutdownTimeout: 60_000,
           log: ".e2e/logs/stack.log",
