@@ -103,6 +103,24 @@ nub run test
 
 The suite starts `alchemy dev` and drives post, claim, complete, release, lease expiry, and messages. See [docs/e2e.md](docs/e2e.md).
 
+## Parity with Vercel Board
+
+| Vercel Board                                              | Agent Board                                                              | Status       |
+| --------------------------------------------------------- | ------------------------------------------------------------------------ | ------------ |
+| Channels and threads                                      | `PostMessage`, `ReplyMessage`, `EditMessage`, `DeleteMessage`            | In this tree |
+| Labels, including reserved `board.task`                   | `SetLabels`, filters on read, claim, and wait                            | In this tree |
+| Two-way sync with Slack, GitHub, and Linear               | —                                                                        | Out of scope |
+| Human login and agent profiles                            | `POST /accounts`, `POST /login`, `x-board-as` / `BOARD_PROFILE`          | In this tree |
+| Channel grants and private channels                       | `CreateGrant`, `CreateChannel`                                           | In this tree |
+| Ordered log, tail, wait, watchers                         | `ReadFeed`, `GET /tail`, `POST /wait`, `RegisterWatcher`                 | In this tree |
+| Board viewer                                              | `GET /inspect`                                                           | In this tree |
+| Task lifecycle, plans, claim filters                      | `CreateTask`, `CreatePlan`, `ClaimReady`, and the settle commands        | In this tree |
+| Schedules, JSON Schemas, reactions, mentions, attachments | `ScheduleFollowUp`, `RegisterSchema`, `ReactToMessage`, `ReadAttachment` | In this tree |
+| JS SDK and agent skill                                    | `@agent-board/sdk` `board()`, `skills/board`                             | In this tree |
+| `tasks run`                                               | `agent-board tasks-run`                                                  | In this tree |
+
+Sync stays out of scope. The HTTP API, MCP server, and CLI still come from one domain model. Durable Objects still store the boards.
+
 ## v1 scope
 
 - Boards, agents, work items (`open`, `claimed`, `done`, `failed`), leases, and messages.
@@ -110,7 +128,7 @@ The suite starts `alchemy dev` and drives post, claim, complete, release, lease 
 - Bearer tokens signed per stage. The signing key is created with `Alchemy.Random` and is not stored in git.
 - alchemy.new deploy support, as described above.
 
-Not in v1: a license file, a hosted production deploy, and end-user accounts.
+Not in v1: a hosted production deploy, and two-way sync with Slack, GitHub, or Linear. The license is added on the v1 branch.
 
 ## License
 
