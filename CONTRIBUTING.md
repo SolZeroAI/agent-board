@@ -23,6 +23,8 @@ nub run test
 
 User-facing changes include a note in `.tegami/`.
 
+Pull request CI runs on GitHub-hosted runners. Jobs that need secrets do not run for a pull request opened from a fork.
+
 ## Code style
 
 TypeScript is checked with tsrs. Formatting is oxfmt. Linting is oxlint with the shared SolZero rules and Effect rules on the domain, Worker, and CLI. Fix findings instead of disabling a rule. A scoped override needs a concrete reason that the rule is wrong for that code.

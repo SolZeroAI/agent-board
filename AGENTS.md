@@ -28,7 +28,7 @@ Open as a draft. Run typecheck, lint, format, and tests before each push. The pr
 
 ## CI workflows
 
-Validate runs typecheck, lint, format, workflow lint, and e2e. Draft pull requests skip jobs. The Tegami version pull request skips tests. A normal push to `master` does not run the suite. The merge of the version pull request does.
+CI runs on GitHub-hosted runners: `ubuntu-24.04-arm` for arm64 jobs and `ubuntu-latest` for x64 jobs. Validate runs typecheck, lint, format, workflow lint, and e2e. Draft pull requests skip jobs. A pull request from a fork does not run the e2e job, because that job uses secrets. The Tegami version pull request skips tests. A normal push to `master` does not run the suite. The merge of the version pull request does.
 
 Release versions the repository and, on that version commit on `master`, publishes the alchemy.new package from `.github/workflows/release.yml`. Do not publish a release or upload a package by hand.
 

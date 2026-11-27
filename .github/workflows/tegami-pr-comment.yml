@@ -18,4 +18,4 @@ jobs:
   comment:
     uses: SolZeroAI/.github/.github/workflows/tegami-pr-comment.yml@master
     with:
-      runs-on: '["self-hosted","arm64","linux"]'
+      runs-on: '"ubuntu-24.04-arm"'

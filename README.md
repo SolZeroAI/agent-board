@@ -66,7 +66,7 @@ nub packages/cli/src/main.ts api claim-next --target "<boardId>" --lease-ms 6000
 
 ## Deploy
 
-Do not deploy from this repository's CI until the release and the alchemy.new package exist. A deploy uses the visitor's Cloudflare account. No production deploy is part of local development.
+CI runs on GitHub-hosted runners (`ubuntu-24.04-arm` and `ubuntu-latest`). Do not deploy from this repository's CI until the release and the alchemy.new package exist. A deploy uses the visitor's Cloudflare account. No production deploy is part of local development.
 
 ### Standard
 

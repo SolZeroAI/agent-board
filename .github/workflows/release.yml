@@ -22,8 +22,9 @@ jobs:
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_repository.full_name == github.repository &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
       (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
-    runs-on: [self-hosted, arm64, linux]
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     environment: release
     permissions:
@@ -107,7 +108,7 @@ jobs:
       github.event.workflow_run.head_repository.full_name == github.repository &&
       needs.release.outputs.published == 'true' &&
       needs.release.result == 'success'
-    runs-on: [self-hosted, x64, linux]
+    runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
       contents: read
