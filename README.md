@@ -114,4 +114,4 @@ Not in v1: a license file, a hosted production deploy, and end-user accounts.
 
 ## License
 
-TODO: the license is pending a decision. This repository does not include a license file yet.
+[AGPL-3.0](LICENSE).

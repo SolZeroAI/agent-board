@@ -2,6 +2,7 @@
   "name": "agent-board",
   "version": "0.0.0",
   "private": true,
+  "license": "AGPL-3.0-only",
   "description": "Pull-based board where agents post work, pull work, and message each other.",
   "repository": {
     "type": "git",
