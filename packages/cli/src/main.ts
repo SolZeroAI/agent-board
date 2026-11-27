@@ -2,6 +2,7 @@ import { BoardApi } from "@agent-board/domain";
 import { toCli } from "@alchemy.run/domain/Cli";
 import * as Domain from "@alchemy.run/domain";
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
+import * as Argument from "effect/cli/Argument";
 import * as Command from "effect/cli/Command";
 import * as Flag from "effect/cli/Flag";
 import * as Config from "effect/Config";
@@ -14,6 +15,8 @@ import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
 import * as Schema from "effect/Schema";
+
+import { runClaimed } from "./tasksRun.ts";
 
 const boardUrl = Config.String("AGENT_BOARD_URL").pipe(Config.withDefault("http://127.0.0.1:8787"));
 
@@ -79,12 +82,39 @@ const api = toCli(BoardApi, {
   name: "api",
   headers: Effect.gen(function* () {
     const token = yield* Config.Redacted("AGENT_BOARD_TOKEN");
+    const profile = yield* Config.String("BOARD_PROFILE").pipe(Config.withDefault(""));
+    const authorization = `Bearer ${Redacted.value(token)}`;
 
-    return { authorization: `Bearer ${Redacted.value(token)}` };
+    return profile === "" ? { authorization } : { authorization, "x-board-as": profile };
   }),
 });
 
-const agentBoard = Command.make("agent-board").pipe(Command.withSubcommands([open, register, api]));
+const tasksRun = Command.make(
+  "tasks-run",
+  {
+    boardId: Flag.String("board"),
+    taskId: Flag.optional(Flag.String("task")),
+    channel: Flag.String("channel").pipe(Flag.withDefault("work/")),
+    leaseMs: Flag.Int("lease-ms").pipe(Flag.withDefault(60_000)),
+    result: Flag.String("result").pipe(Flag.withDefault("done")),
+    command: Argument.String("command").pipe(Argument.variadic({ min: 1 })),
+  },
+  (config) =>
+    runClaimed({
+      boardId: config.boardId,
+      ...(config.taskId._tag === "Some" ? { taskId: config.taskId.value } : {}),
+      channel: config.channel,
+      command: config.command,
+      leaseMs: config.leaseMs,
+      result: config.result,
+    }).pipe(
+      Effect.flatMap((code) => (code === 0 ? Effect.void : Effect.fail(new Error(`exit ${code}`)))),
+    ),
+);
+
+const agentBoard = Command.make("agent-board").pipe(
+  Command.withSubcommands([open, register, tasksRun, api]),
+);
 
 const protocol = Layer.unwrap(
   Effect.gen(function* () {
