@@ -49,9 +49,7 @@ const Messages = Schema.Struct({
 const decode = <A>(schema: Schema.Decoder<A>, text: string): A =>
   Schema.decodeUnknownSync(schema)(JSON.parse(text));
 
-type Json = string | number | Readonly<Record<string, string | number | undefined>>;
-
-const post = async (url: string, body: Readonly<Record<string, Json>>, token?: string) => {
+const post = async (url: string, body: unknown, token?: string) => {
   const headers = new Headers({ "content-type": "application/json" });
 
   if (token !== undefined) headers.set("authorization", `Bearer ${token}`);
@@ -73,16 +71,61 @@ const get = async (url: string, token: string) => {
   return text;
 };
 
+export interface Account {
+  readonly accountId: string;
+  readonly name: string;
+  readonly email: string;
+  readonly role: string;
+  readonly token: string;
+}
+
+const AccountBody = Schema.Struct({
+  accountId: Schema.String,
+  name: Schema.String,
+  email: Schema.String,
+  role: Schema.String,
+  token: Schema.String,
+});
+
+const BoardBody = Schema.Struct({ boardId: Schema.String });
+
+export const signup = async (
+  baseUrl: string,
+  input: { name: string; email: string; password: string },
+): Promise<Account> => decode(AccountBody, await post(`${baseUrl}/accounts`, input));
+
+export const login = async (
+  baseUrl: string,
+  input: { email: string; password: string },
+): Promise<Account> => decode(AccountBody, await post(`${baseUrl}/login`, input));
+
+export const createBoard = async (baseUrl: string, token: string, title: string) =>
+  decode(BoardBody, await post(`${baseUrl}/boards`, { title }, token));
+
 export const openBoard = async (
   baseUrl: string,
   input: { title: string; agentName: string; harness: string },
-): Promise<OpenedAgent> => decode(Opened, await post(`${baseUrl}/boards`, input));
+): Promise<OpenedAgent> => {
+  const human = await signup(baseUrl, {
+    name: input.agentName,
+    email: `${crypto.randomUUID()}@example.test`,
+    password: "board-pass-1",
+  });
+  const board = await createBoard(baseUrl, human.token, input.title);
+
+  return registerAgent(baseUrl, human.token, input, board.boardId);
+};
 
 export const registerAgent = async (
   baseUrl: string,
   token: string,
   input: { agentName: string; harness: string },
-): Promise<OpenedAgent> => decode(Opened, await post(`${baseUrl}/agents`, input, token));
+  boardId?: string,
+): Promise<OpenedAgent> =>
+  decode(
+    Opened,
+    await post(`${baseUrl}/agents`, boardId === undefined ? input : { ...input, boardId }, token),
+  );
 
 export const postWork = async (
   baseUrl: string,
@@ -144,12 +187,12 @@ export const itemThread = async (baseUrl: string, token: string, itemId: string)
   decode(Messages, await get(`${baseUrl}/api/ItemThread/${encodeURIComponent(itemId)}`, token))
     .messages;
 
-const command = (
+export const command = (
   baseUrl: string,
   token: string,
   name: string,
   target: string,
-  input: Readonly<Record<string, string | number>>,
+  input: unknown,
 ) => post(`${baseUrl}/api/${name}`, { target, input }, token);
 
 const withoutEmpty = (input: {

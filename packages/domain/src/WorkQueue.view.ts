@@ -27,6 +27,8 @@ export class WorkQueue extends Domain.View("WorkQueue", {
   validate: Effect.fn(function* (request) {
     const actor = yield* CurrentActor;
 
+    if (actor._tag === "Human") return;
+
     if (actor.boardId !== request.key.id) return yield* new NotMember();
   }),
   evolve: {

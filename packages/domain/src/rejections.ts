@@ -42,3 +42,83 @@ export class InvalidLease extends Domain.Rejection(
   { leaseMs: Schema.Number },
   bad,
 ) {}
+
+/** The email is already registered. */
+export class AccountExists extends Domain.Rejection("AccountExists", {}, conflict) {}
+
+/** The email or password does not match an account. */
+export class BadCredentials extends Domain.Rejection("BadCredentials", {}, forbidden) {}
+
+/** A password must be at least 8 characters. */
+export class WeakPassword extends Domain.Rejection("WeakPassword", {}, bad) {}
+
+/** The caller may not do that in this channel. */
+export class Forbidden extends Domain.Rejection(
+  "Forbidden",
+  { action: Schema.String },
+  forbidden,
+) {}
+
+/** That channel path is not allowed. */
+export class InvalidChannel extends Domain.Rejection("InvalidChannel", {}, bad) {}
+
+/** A channel with that path already exists. */
+export class ChannelExists extends Domain.Rejection("ChannelExists", {}, conflict) {}
+
+/** No message has that id. */
+export class UnknownMessage extends Domain.Rejection("UnknownMessage", {}, missing) {}
+
+/** Only the author, or a team owner, may change this message. */
+export class NotAuthor extends Domain.Rejection("NotAuthor", {}, forbidden) {}
+
+/** A label key or value was rejected, including reserved `board.*` keys. */
+export class InvalidLabel extends Domain.Rejection("InvalidLabel", { key: Schema.String }, bad) {}
+
+/** No schema is registered under that id. */
+export class UnknownSchema extends Domain.Rejection("UnknownSchema", {}, missing) {}
+
+/** Posted data does not match the named schema. */
+export class SchemaInvalid extends Domain.Rejection(
+  "SchemaInvalid",
+  { reason: Schema.String },
+  bad,
+) {}
+
+/** The attachment is missing a name or is larger than the board allows. */
+export class InvalidAttachment extends Domain.Rejection("InvalidAttachment", {}, bad) {}
+
+/** No attachment has that id. */
+export class UnknownAttachment extends Domain.Rejection("UnknownAttachment", {}, missing) {}
+
+/** No task has that id. */
+export class UnknownTask extends Domain.Rejection("UnknownTask", {}, missing) {}
+
+/** The task is not in the state this command needs. */
+export class TaskState extends Domain.Rejection("TaskState", { state: Schema.String }, conflict) {}
+
+/** The caller does not hold this task. */
+export class ClaimLost extends Domain.Rejection("ClaimLost", {}, conflict) {}
+
+/** No ready task matched the claim. */
+export class NothingReady extends Domain.Rejection("NothingReady", {}, missing) {}
+
+/** Only the task owner, or someone with manage, may do this. */
+export class TaskNotOwned extends Domain.Rejection("TaskNotOwned", {}, forbidden) {}
+
+/** The plan reused an idempotency key with a different body. */
+export class IdempotencyConflict extends Domain.Rejection("IdempotencyConflict", {}, conflict) {}
+
+/** A plan entry used an unknown field or an unknown need. */
+export class InvalidPlan extends Domain.Rejection("InvalidPlan", { reason: Schema.String }, bad) {}
+
+/** No grant has that id. */
+export class UnknownGrant extends Domain.Rejection("UnknownGrant", {}, missing) {}
+
+/** The schedule delay is outside the allowed range. */
+export class InvalidSchedule extends Domain.Rejection("InvalidSchedule", {}, bad) {}
+
+/** The watcher URL must be http or https. */
+export class InvalidWatcher extends Domain.Rejection("InvalidWatcher", {}, bad) {}
+
+/** The claim looked through too many channels. */
+export class ChannelTreeTooLarge extends Domain.Rejection("ChannelTreeTooLarge", {}, bad) {}

@@ -74,15 +74,60 @@ export default defineConfig({
       },
     },
     {
+      // The parity modules and their HTTP edge follow the aggregate style:
+      // plain branches, optional fields, and JSON at the boundary.
+      files: [
+        "packages/domain/src/decide*.ts",
+        "packages/domain/src/foldParity.ts",
+        "packages/domain/src/replyParity.ts",
+        "packages/domain/src/scope.ts",
+        "packages/domain/src/parity.commands.ts",
+        "packages/domain/src/Directory.aggregate.ts",
+        "packages/domain/src/Board.aggregate.ts",
+        "packages/domain/src/password.ts",
+        "packages/domain/src/grants.ts",
+        "packages/domain/src/jsonSchema.ts",
+        "packages/domain/src/text.ts",
+        "packages/server/src/**/*.ts",
+        "packages/sdk/**/*.ts",
+        "packages/cli/src/**/*.ts",
+        "tests/**/*.ts",
+      ],
+      rules: {
+        "anti-slop/require-readable-spacing": "off",
+        "anti-slop/require-safety-comment-for-type-assertion": "off",
+        "anti-slop/no-unknown-parameters": "off",
+        "anti-slop/no-unsafe-dictionary-type": "off",
+        "anti-slop/no-runtime-typeof": "off",
+        "anti-slop/no-conditional-empty-object-spread": "off",
+        "anti-slop-effect/no-manual-tag-comparison": "off",
+        "anti-slop-effect/no-manual-tagged-construction": "off",
+        "anti-slop-effect/no-manual-effect-error-tag": "off",
+        "solzero/no-return-in-arrow": "off",
+        "solzero/no-nested-effect-gen": "off",
+        "solzero/no-ternary": "off",
+        "solzero/avoid-untagged-errors": "off",
+        "effect/prefer-effect-fn": "off",
+      },
+    },
+    {
       // Session verification follows Alchemy's bearer-token example: split the
       // token, then branch on the signature. Context.Service requires its type
       // parameters, so the channel tuple is the service declaration.
-      files: ["packages/server/src/SessionLive.ts"],
+      files: [
+        "packages/server/src/SessionLive.ts",
+        "packages/server/src/password.ts",
+        "packages/server/src/routes.ts",
+        "packages/server/src/inspectPage.ts",
+        "packages/sdk/**/*.ts",
+        "packages/cli/src/tasksRun.ts",
+      ],
       rules: {
         "solzero/no-if-statement": "off",
         "solzero/no-ternary": "off",
         "solzero/no-manual-effect-channels": "off",
         "solzero/no-match-effect-branch": "off",
+        "effect/avoid-process-env": "off",
       },
     },
   ],

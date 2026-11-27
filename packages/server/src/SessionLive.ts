@@ -93,10 +93,35 @@ const verifySession = Effect.fn(function* (token: string) {
   );
 });
 
+const cookieToken = (headers: Headers.Headers) =>
+  Option.flatMap(Headers.get(headers, "cookie"), (value) => {
+    const parts = value.split(";").map((part) => part.trim());
+    const match = parts.find((part) => part.startsWith("board_session="));
+
+    return match === undefined
+      ? Option.none<string>()
+      : Option.some(match.slice("board_session=".length));
+  });
+
 const tokenOf = (headers: Headers.Headers): Option.Option<string> =>
-  Option.flatMap(Headers.get(headers, "authorization"), (value) =>
-    value.startsWith("Bearer ") ? Option.some(value.slice("Bearer ".length)) : Option.none(),
+  Option.orElse(
+    Option.flatMap(Headers.get(headers, "authorization"), (value) =>
+      value.startsWith("Bearer ") ? Option.some(value.slice("Bearer ".length)) : Option.none(),
+    ),
+    () => cookieToken(headers),
   );
+
+const withProfile = (actor: Actor, headers: Headers.Headers): Option.Option<Actor> => {
+  const header = Headers.get(headers, "x-board-as");
+
+  if (Option.isNone(header) || header.value.length === 0) return Option.some(actor);
+
+  if (actor.profile !== undefined && actor.profile !== header.value) return Option.none();
+
+  if (actor.profile === header.value) return Option.some(actor);
+
+  return Option.some({ ...actor, profile: header.value });
+};
 
 /** The actor a request's bearer token names, when the token is valid. */
 export const actorFromHeaders = (headers: Headers.Headers) =>
@@ -120,7 +145,11 @@ export const SessionLive = Layer.effect(
             Effect.flatMap(
               Option.match({
                 onNone: () => Effect.fail(new Unauthorized()),
-                onSome: (actor) => Effect.provideService(effect, CurrentActor, actor),
+                onSome: (actor) =>
+                  Option.match(withProfile(actor, headers), {
+                    onNone: () => Effect.fail(new Unauthorized()),
+                    onSome: (next) => Effect.provideService(effect, CurrentActor, next),
+                  }),
               }),
             ),
           ),

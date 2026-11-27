@@ -41,7 +41,7 @@ export class Inbox extends Domain.View("Inbox", {
   validate: Effect.fn(function* (request) {
     const actor = yield* CurrentActor;
 
-    if (actor.agentId !== request.key) return yield* new NotMember();
+    if (actor._tag !== "Agent" || actor.agentId !== request.key) return yield* new NotMember();
   }),
   evolve: {
     MessageSent: (state, event) => ({ messages: [...state.messages, asMessage(event)] }),
