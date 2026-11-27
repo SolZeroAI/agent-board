@@ -1,0 +1,21 @@
+name: Tegami PR Comment
+
+on:
+  workflow_run:
+    workflows: [Tegami PR Preview]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: tegami-pr-comment-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  comment:
+    uses: SolZeroAI/.github/.github/workflows/tegami-pr-comment.yml@master
+    with:
+      runs-on: '["self-hosted","arm64","linux"]'

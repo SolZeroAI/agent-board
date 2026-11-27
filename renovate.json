@@ -1,0 +1,3 @@
+{
+  "extends": ["github>SolZeroAI/renovate-config"]
+}
