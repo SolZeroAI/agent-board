@@ -5,15 +5,16 @@ on:
     workflows: [Validate]
     types: [completed]
     branches: [master]
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
 
+# The release of a version commit has its own group. A newer pending run in one group
+# replaces the older pending run, so a later master merge must not replace the only run
+# that publishes a release.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event_name == 'workflow_run' && startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && '-publish' || '' }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.workflow }}-${{ github.ref }}${{ startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && '-publish' || '' }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -21,11 +22,10 @@ jobs:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.head_repository.full_name == github.repository &&
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
-      (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+      github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
+    # Writes go through the release app token. This job's GITHUB_TOKEN stays read-only.
     permissions:
       contents: read
     outputs:
@@ -50,6 +50,7 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
+          # Credentials stay in the checkout so the v* tag push uses this token.
           token: ${{ steps.release-token.outputs.token }}
 
       - name: Set up Nub
@@ -62,6 +63,9 @@ jobs:
       - name: Install dependencies
         run: nub install --frozen-lockfile
 
+      # Only the version commit releases. Tegami writes VERSION, and this step reads it.
+      # A squash merge of the solzero-bot Version Packages pull request is that commit:
+      # the title starts with "Version Packages" and the author is solzero-bot.
       - name: Skip publish when the version tag exists
         id: published
         env:
@@ -81,6 +85,9 @@ jobs:
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Only the squash merge of the Tegami version pull request publishes, because only its
+      # Validate run tests the release. Another master push only opens or updates the version
+      # pull request. To publish again after a failure, re-run the Release run of the version commit.
       - name: Version or publish release
         run: |
           if [ "$RELEASE_COMMIT" = "true" ]; then
