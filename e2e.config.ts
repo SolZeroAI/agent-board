@@ -3,6 +3,7 @@ import { github } from "@e2e-dev/github";
 import { web } from "@e2e-dev/web";
 import type { E2EConfig } from "e2e";
 
+import { ignoreUnobservedChanges } from "./scripts/e2e/filters.ts";
 import { e2eModels } from "./scripts/e2e/models.ts";
 
 // The suite calls the account's default AI Gateway with CF_AI_GATEWAY_E2E_TOKEN.
@@ -50,7 +51,7 @@ export default {
         "Local Agent Board. Use only the disposable board created by the test. Do not deploy, pay, or send messages outside the local server.",
     },
   },
-  filters: [decisionFilter({ model: decisionModel })],
+  filters: [ignoreUnobservedChanges(decisionFilter({ model: decisionModel }))],
   workers: 1,
   retries: 0,
   timeout: 180_000,
