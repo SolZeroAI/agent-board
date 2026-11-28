@@ -127,12 +127,12 @@ jobs:
             exit 0
           fi
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            nub run test:e2e:cache-strict -- --changed-since "origin/${{ github.base_ref }}" --pass-with-no-tests
+            nub run test:e2e:cache-strict --changed-since "origin/${{ github.base_ref }}" --pass-with-no-tests
             exit 0
           fi
           base="$(git log --grep='^Version Packages' --author='341870119+solzero-bot[bot]@users.noreply.github.com' --format=%H HEAD^ | head -n 1 || true)"
           if [ -n "$base" ]; then
-            nub run test:e2e:cache-strict -- --changed-since "$base" --pass-with-no-tests
+            nub run test:e2e:cache-strict --changed-since "$base" --pass-with-no-tests
           else
             nub run test:e2e:cache-strict
           fi

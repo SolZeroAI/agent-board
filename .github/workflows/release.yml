@@ -72,9 +72,11 @@ jobs:
           version="$(tr -d '[:space:]' < VERSION)"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           if [ "$RELEASE_COMMIT" = "true" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ! gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/v${version}" >/dev/null 2>&1; then
-            echo "tag=v${version}" >> "$GITHUB_OUTPUT"
-            echo "version=${version}" >> "$GITHUB_OUTPUT"
-            echo "published=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "tag=v${version}"
+              echo "version=${version}"
+              echo "published=true"
+            } >> "$GITHUB_OUTPUT"
           else
             echo "published=false" >> "$GITHUB_OUTPUT"
           fi
