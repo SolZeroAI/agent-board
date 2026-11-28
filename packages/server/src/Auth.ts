@@ -1,4 +1,5 @@
 import { BetterAuth, type BetterAuthInstance } from "@alchemy.run/better-auth";
+import type { RuntimeContext } from "alchemy";
 import { APIError } from "better-auth/api";
 import { hashPassword, verifyPassword } from "better-auth/crypto";
 import { bearer } from "better-auth/plugins";
@@ -49,6 +50,13 @@ const authOptions = {
 
 export type BoardAuthService = BetterAuthInstance<typeof authOptions>;
 
+/**
+ * Better Auth reads Cloudflare bindings from the request `RuntimeContext`.
+ * That context does not exist when this layer is built, so the methods keep
+ * the requirement. Resolving it here would pin the first request's bindings.
+ *
+ * @effect-expect-leaking RuntimeContext
+ */
 export class BoardAuth extends Context.Service<BoardAuth, BoardAuthService>()("BoardAuth") {}
 
 export type SignupAdmission = (input: {
@@ -68,6 +76,11 @@ interface PendingAdmission {
 
 let pending: PendingAdmission | undefined;
 
+const rejectionTag = (cause: unknown) =>
+  typeof cause === "object" && cause !== null && "_tag" in cause && typeof cause._tag === "string"
+    ? cause._tag
+    : undefined;
+
 /** The Worker binds this once it can record the account on the team directory. */
 export const bindSignupAdmission = (next: SignupAdmission) => {
   admit = next;
@@ -85,10 +98,9 @@ const withAdmission = async <A>(next: PendingAdmission, body: () => Promise<A>) 
 };
 
 const signingSecret = Config.Redacted("BETTER_AUTH_SECRET").pipe(
-  Effect.flatMap((secret) =>
-    Redacted.value(secret).trim().length === 0
-      ? Effect.die(new Error("BETTER_AUTH_SECRET is required"))
-      : Effect.succeed(secret),
+  Effect.filterOrElse(
+    (secret) => Redacted.value(secret).trim().length > 0,
+    () => Effect.die(new Error("BETTER_AUTH_SECRET is required")),
   ),
   Effect.orDie,
 );
@@ -128,17 +140,13 @@ const boardAuth = (secret: typeof signingSecret) =>
 
               return { data: { ...user, id: userId, role } };
             } catch (cause) {
-              if (
-                pending?.seed === true &&
-                cause instanceof Error &&
-                cause.message === "AccountExists"
-              ) {
+              if (pending?.seed === true && rejectionTag(cause) === "AccountExists") {
                 return { data: { ...user, id: userId, role: "owner" } };
               }
 
-              const message = cause instanceof Error ? cause.message : "Invite required";
-
-              throw new APIError("FORBIDDEN", { message });
+              throw new APIError("FORBIDDEN", {
+                message: rejectionTag(cause) ?? "Invite required",
+              });
             }
           },
         },
@@ -200,7 +208,7 @@ const remember = (input: {
   if (admit === undefined) return Promise.reject(new Error("Signup is not ready"));
 
   return admit(input).catch((cause: unknown) => {
-    if (cause instanceof Error && cause.message === "AccountExists") return "owner";
+    if (rejectionTag(cause) === "AccountExists") return "owner";
 
     throw cause;
   });

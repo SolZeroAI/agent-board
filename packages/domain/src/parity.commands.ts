@@ -48,13 +48,13 @@ const actorFields = {
   actorId: Schema.String,
   actorName: Schema.String,
   profile: Schema.optional(Schema.String),
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 };
 
 export class ChannelCreated extends Domain.Event("ChannelCreated", {
   path: Schema.String,
   isPrivate: Schema.Boolean,
-  seq: Schema.Number,
+  seq: Schema.Finite,
 }) {}
 
 export class MessagePosted extends Domain.Event("MessagePosted", {
@@ -69,8 +69,8 @@ export class MessagePosted extends Domain.Event("MessagePosted", {
   mentions: Schema.Array(Schema.String),
   schemaId: Schema.optional(Schema.String),
   dataJson: Schema.optional(Schema.String),
-  createdAt: Schema.Number,
-  seq: Schema.Number,
+  createdAt: Schema.Finite,
+  seq: Schema.Finite,
 }) {}
 
 export class MessageEdited extends Domain.Event("MessageEdited", {
@@ -137,7 +137,7 @@ export class TaskCreated extends Domain.Event("TaskCreated", {
   ownerProfile: Schema.optional(Schema.String),
   assignee: Schema.optional(Schema.String),
   needs: Schema.Array(Schema.String),
-  seq: Schema.Number,
+  seq: Schema.Finite,
   text: Schema.String,
 }) {}
 
@@ -147,76 +147,76 @@ export class TaskClaimed extends Domain.Event("TaskClaimed", {
   taskId: Schema.String,
   claimantId: Schema.String,
   claimantProfile: Schema.optional(Schema.String),
-  leaseMs: Schema.Number,
-  claimGeneration: Schema.Number,
-  createdAt: Schema.Number,
+  leaseMs: Schema.Finite,
+  claimGeneration: Schema.Finite,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskRenewed extends Domain.Event("TaskRenewed", {
   taskId: Schema.String,
-  leaseMs: Schema.Number,
-  claimGeneration: Schema.Number,
-  createdAt: Schema.Number,
+  leaseMs: Schema.Finite,
+  claimGeneration: Schema.Finite,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskReleased extends Domain.Event("TaskReleased", {
   taskId: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskCompleted extends Domain.Event("TaskCompleted", {
   taskId: Schema.String,
   result: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskFailed extends Domain.Event("TaskFailed", {
   taskId: Schema.String,
   reason: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskBlocked extends Domain.Event("TaskBlocked", {
   taskId: Schema.String,
   kind: Schema.String,
   prompt: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskUnblocked extends Domain.Event("TaskUnblocked", {
   taskId: Schema.String,
   state: Schema.Literals(["waiting", "ready"]),
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskCanceled extends Domain.Event("TaskCanceled", {
   taskId: Schema.String,
   reason: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskReopened extends Domain.Event("TaskReopened", {
   taskId: Schema.String,
   state: Schema.Literals(["waiting", "ready"]),
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskAssigned extends Domain.Event("TaskAssigned", {
   taskId: Schema.String,
   assignee: Schema.optional(Schema.String),
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskNeedsChanged extends Domain.Event("TaskNeedsChanged", {
   taskId: Schema.String,
   needs: Schema.Array(Schema.String),
   state: Schema.Literals(["waiting", "ready"]),
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
 }) {}
 
 export class TaskExpired extends Domain.Event("TaskExpired", {
   taskId: Schema.String,
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
 }) {}
 
 export class WatcherRegistered extends Domain.Event("WatcherRegistered", {
@@ -240,9 +240,9 @@ export class FollowUpScheduled extends Domain.Event("FollowUpScheduled", {
   scheduleId: Schema.String,
   threadId: Schema.String,
   body: Schema.String,
-  inMs: Schema.optional(Schema.Number),
-  everyMs: Schema.optional(Schema.Number),
-  generation: Schema.Number,
+  inMs: Schema.optional(Schema.Finite),
+  everyMs: Schema.optional(Schema.Finite),
+  generation: Schema.Finite,
   ownerId: Schema.String,
   authorName: Schema.String,
   profile: Schema.optional(Schema.String),
@@ -254,7 +254,7 @@ export class FollowUpCanceled extends Domain.Event("FollowUpCanceled", {
 
 export class FollowUpDelivered extends Domain.Event("FollowUpDelivered", {
   scheduleId: Schema.String,
-  generation: Schema.Number,
+  generation: Schema.Finite,
 }) {}
 
 export class PlanNoted extends Domain.Event("PlanNoted", {
@@ -330,7 +330,7 @@ export class PostMessage extends Domain.Command("PostMessage", {
     SchemaInvalid,
     InvalidAttachment,
   ],
-  reply: { messageId: Schema.String, seq: Schema.Number, cursor: Schema.String },
+  reply: { messageId: Schema.String, seq: Schema.Finite, cursor: Schema.String },
 }) {}
 
 export class ReplyMessage extends Domain.Command("ReplyMessage", {
@@ -343,7 +343,7 @@ export class ReplyMessage extends Domain.Command("ReplyMessage", {
   },
   events: [MessagePosted, AttachmentAdded, WatchersMatched],
   rejects: [BoardClosed, NotMember, Forbidden, UnknownMessage, InvalidMessage, InvalidAttachment],
-  reply: { messageId: Schema.String, seq: Schema.Number, cursor: Schema.String },
+  reply: { messageId: Schema.String, seq: Schema.Finite, cursor: Schema.String },
 }) {}
 
 export class EditMessage extends Domain.Command("EditMessage", {
@@ -486,7 +486,7 @@ export class MakeTask extends Domain.Command("MakeTask", {
 export class ClaimTask extends Domain.Command("ClaimTask", {
   target: BoardId,
   middleware: session,
-  input: { taskId: Schema.String, leaseMs: Schema.Number },
+  input: { taskId: Schema.String, leaseMs: Schema.Finite },
   events: [TaskClaimed, LabelsChanged, WatchersMatched],
   rejects: [...taskRejects],
   reply: { task: Schema.NullOr(TaskSchema) },
@@ -497,7 +497,7 @@ export class ClaimReady extends Domain.Command("ClaimReady", {
   middleware: session,
   input: {
     channel: Schema.String,
-    leaseMs: Schema.Number,
+    leaseMs: Schema.Finite,
     labelKey: Schema.optional(Schema.String),
     labelValue: Schema.optional(Schema.String),
     from: Schema.optional(Schema.Array(Schema.String)),
@@ -510,10 +510,10 @@ export class ClaimReady extends Domain.Command("ClaimReady", {
 export class RenewTask extends Domain.Command("RenewTask", {
   target: BoardId,
   middleware: session,
-  input: { taskId: Schema.String, leaseMs: Schema.Number },
+  input: { taskId: Schema.String, leaseMs: Schema.Finite },
   events: [TaskRenewed],
   rejects: [...taskRejects],
-  reply: { taskId: Schema.String, claimGeneration: Schema.Number },
+  reply: { taskId: Schema.String, claimGeneration: Schema.Finite },
 }) {}
 
 export class CompleteTask extends Domain.Command("CompleteTask", {
@@ -600,7 +600,7 @@ export class SetTaskNeeds extends Domain.Command("SetTaskNeeds", {
 /** The lease ran out. Scheduled by the board, never by a client. */
 export class ExpireTask extends Domain.Command("ExpireTask", {
   target: BoardId,
-  input: { taskId: Schema.String, claimGeneration: Schema.Number },
+  input: { taskId: Schema.String, claimGeneration: Schema.Finite },
   events: [TaskExpired, LabelsChanged],
 }) {}
 
@@ -635,8 +635,8 @@ export class ScheduleFollowUp extends Domain.Command("ScheduleFollowUp", {
   input: {
     threadId: Schema.String,
     body: Schema.String,
-    inMs: Schema.optional(Schema.Number),
-    everyMs: Schema.optional(Schema.Number),
+    inMs: Schema.optional(Schema.Finite),
+    everyMs: Schema.optional(Schema.Finite),
   },
   events: [FollowUpScheduled],
   rejects: [BoardClosed, NotMember, Forbidden, UnknownMessage, InvalidSchedule, InvalidMessage],
@@ -656,7 +656,7 @@ export class DeliverFollowUp extends Domain.Command("DeliverFollowUp", {
   target: BoardId,
   input: {
     scheduleId: Schema.String,
-    generation: Schema.Number,
+    generation: Schema.Finite,
   },
   events: [MessagePosted, FollowUpDelivered, FollowUpScheduled, WatchersMatched],
 }) {}

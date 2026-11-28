@@ -49,8 +49,8 @@ export const MessageSchema = Schema.Struct({
   schemaId: Schema.optional(Schema.String),
   dataJson: Schema.optional(Schema.String),
   deleted: Schema.Boolean,
-  seq: Schema.Number,
-  createdAt: Schema.Number,
+  seq: Schema.Finite,
+  createdAt: Schema.Finite,
 });
 
 export type Message = typeof MessageSchema.Type;
@@ -73,24 +73,24 @@ export const TaskSchema = Schema.Struct({
   ownerProfile: Schema.optional(Schema.String),
   assignee: Schema.optional(Schema.String),
   needs: Schema.Array(Schema.String),
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
   claimantId: Schema.optional(Schema.String),
   claimantProfile: Schema.optional(Schema.String),
-  leaseMs: Schema.optional(Schema.Number),
+  leaseMs: Schema.optional(Schema.Finite),
   result: Schema.optional(Schema.String),
   reason: Schema.optional(Schema.String),
   blockedKind: Schema.optional(Schema.String),
   blockedPrompt: Schema.optional(Schema.String),
-  seq: Schema.Number,
+  seq: Schema.Finite,
 });
 
 export type Task = typeof TaskSchema.Type;
 
 export const FeedSchema = Schema.Struct({
   cursor: Schema.String,
-  seq: Schema.Number,
+  seq: Schema.Finite,
   type: Schema.String,
-  createdAt: Schema.Number,
+  createdAt: Schema.Finite,
   actorId: Schema.String,
   actorName: Schema.String,
   profile: Schema.optional(Schema.String),
@@ -121,8 +121,8 @@ export const ScheduleSchema = Schema.Struct({
   scheduleId: Schema.String,
   threadId: Schema.String,
   body: Schema.String,
-  everyMs: Schema.optional(Schema.Number),
-  generation: Schema.Number,
+  everyMs: Schema.optional(Schema.Finite),
+  generation: Schema.Finite,
   ownerId: Schema.String,
   authorName: Schema.String,
   profile: Schema.optional(Schema.String),
@@ -150,10 +150,10 @@ const Item = Schema.Struct({
   body: Schema.String,
   authorId: AgentId,
   status: Schema.Literals(["open", "claimed", "done", "failed"]),
-  seq: Schema.Number,
-  claimGeneration: Schema.Number,
+  seq: Schema.Finite,
+  claimGeneration: Schema.Finite,
   claimantId: Schema.optional(AgentId),
-  leaseMs: Schema.optional(Schema.Number),
+  leaseMs: Schema.optional(Schema.Finite),
   failureReason: Schema.optional(Schema.String),
 });
 
@@ -163,7 +163,7 @@ const StoredMessage = Schema.Struct({
   messageId: Schema.String,
   fromAgentId: AgentId,
   body: Schema.String,
-  seq: Schema.Number,
+  seq: Schema.Finite,
   toAgentId: Schema.optional(AgentId),
   itemId: Schema.optional(Schema.String),
 });
@@ -171,7 +171,7 @@ const StoredMessage = Schema.Struct({
 export const ChannelSchema = Schema.Struct({
   path: Schema.String,
   isPrivate: Schema.Boolean,
-  seq: Schema.Number,
+  seq: Schema.Finite,
 });
 
 const SchemaDoc = Schema.Struct({
@@ -196,13 +196,13 @@ export const OpenState = Schema.TaggedStruct("Open", {
   tasks: Schema.Record(Schema.String, TaskSchema),
   channels: Schema.Record(Schema.String, ChannelSchema),
   grants: Schema.Array(GrantSchema),
-  nextGrant: Schema.Number,
+  nextGrant: Schema.Finite,
   schemas: Schema.Record(Schema.String, SchemaDoc),
   watchers: Schema.Array(WatcherSchema),
   schedules: Schema.Record(Schema.String, ScheduleSchema),
   plans: Schema.Record(Schema.String, PlanSchema),
   feed: Schema.Array(FeedSchema),
-  nextSeq: Schema.Number,
+  nextSeq: Schema.Finite,
 });
 
 export const State = Schema.Union([Schema.TaggedStruct("Unopened", {}), OpenState]);

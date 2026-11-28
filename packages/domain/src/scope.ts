@@ -39,7 +39,7 @@ export const authored = (actor: Actor, createdAt: number) => ({
 export const snapshot = (actor: Actor) => JSON.stringify(actor);
 
 export const actorFrom = (json: string) =>
-  Option.getOrUndefined(Schema.decodeUnknownOption(Schema.fromJsonString(Actor))(json));
+  Option.getOrUndefined(Schema.decodeOption(Schema.fromJsonString(Actor))(json));
 
 export const withFeed = (
   open: Open,

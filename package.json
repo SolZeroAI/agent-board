@@ -19,7 +19,7 @@
     "prepare": "lefthook install --force",
     "dev": "alchemy dev",
     "typecheck": "turbo run typecheck && tsrs --pretty false --noEmit --incremental false -p tsconfig.json && tsrs --pretty false --noEmit --incremental false -p tests/tsconfig.json",
-    "effect:diagnostics": "effect-tsrs diagnostics --project tsconfig.diagnostics.json --lspconfig '{}'",
+    "effect:diagnostics": "effect-tsrs diagnostics --project tsconfig.diagnostics.json",
     "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt --check .",

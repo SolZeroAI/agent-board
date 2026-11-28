@@ -2,27 +2,55 @@ import { spawn } from "node:child_process";
 
 import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
 
 const boardUrl = Config.String("AGENT_BOARD_URL").pipe(Config.withDefault("http://127.0.0.1:8787"));
 
+class BoardCallFailed extends Schema.TaggedError<
+  BoardCallFailed,
+  { readonly brand: unique symbol }
+>()("BoardCallFailed", {
+  command: Schema.String,
+  detail: Schema.String,
+}) {}
+
+class NothingReady extends Schema.TaggedError<NothingReady, { readonly brand: unique symbol }>()(
+  "NothingReady",
+  {},
+) {}
+
+const Reply = Schema.Struct({
+  reply: Schema.Struct({
+    task: Schema.optional(Schema.NullOr(Schema.Struct({ taskId: Schema.String }))),
+  }),
+});
+
+const detailOf = (cause: unknown) => (cause instanceof Error ? cause.message : "Board call failed");
+
 const call = (url: string, token: string, name: string, target: string, input: unknown) =>
-  Effect.tryPromise({
-    try: async () => {
-      const response = await fetch(`${url}/api/${name}`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ target, input }),
-      });
-      const text = await response.text();
+  Effect.gen(function* () {
+    const response = yield* Effect.tryPromise({
+      try: () =>
+        fetch(`${url}/api/${name}`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ target, input }),
+        }),
+      catch: (cause) => new BoardCallFailed({ command: name, detail: detailOf(cause) }),
+    });
+    const text = yield* Effect.tryPromise({
+      try: () => response.text(),
+      catch: (cause) => new BoardCallFailed({ command: name, detail: detailOf(cause) }),
+    });
 
-      if (!response.ok) throw new Error(text);
+    if (!response.ok) return yield* new BoardCallFailed({ command: name, detail: text });
 
-      return JSON.parse(text) as { reply: { task?: { taskId: string } | null } };
-    },
-    catch: (error) => error,
+    return yield* Schema.decodeEffect(Schema.fromJsonString(Reply))(text).pipe(
+      Effect.mapError(() => new BoardCallFailed({ command: name, detail: text })),
+    );
   });
 
 /**
@@ -52,7 +80,7 @@ export const runClaimed = (input: {
           });
     const taskId = input.taskId ?? claimed.reply.task?.taskId;
 
-    if (taskId === undefined) return yield* Effect.fail(new Error("nothing_ready"));
+    if (taskId === undefined) return yield* new NothingReady();
     const code = yield* Effect.promise(
       () =>
         new Promise<number>((resolve) => {

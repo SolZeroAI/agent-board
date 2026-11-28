@@ -10,7 +10,7 @@ Write for someone who will run an agent against the board. Name the command, the
 
 ## Validation
 
-`nub run typecheck` uses tsrs. `nub run effect:diagnostics` is local Effect feedback and is not a CI gate.
+`nub run typecheck` uses tsrs. `nub run effect:diagnostics` is effect-tsrs. It fails on error-level Effect diagnostics. Warnings and suggestions do not fail the command.
 
 ## Lint
 
@@ -24,11 +24,11 @@ Action replay recordings in `.e2e/cache` are committed, and CI replays them with
 
 ## Pull requests
 
-Open as a draft. Run typecheck, lint, format, and tests before each push. The pre-push hook runs the first three. Mark ready when those pass.
+Open as a draft. Run typecheck, Effect diagnostics, lint, format, and tests before each push. The pre-push hook runs the first four. Mark ready when those pass.
 
 ## CI workflows
 
-CI runs on GitHub-hosted runners: `ubuntu-24.04-arm` for arm64 jobs and `ubuntu-latest` for x64 jobs. Validate runs typecheck, lint, format, workflow lint, and e2e. Draft pull requests skip jobs. A pull request from a fork does not run the e2e job, because that job uses secrets. The Tegami version pull request skips tests. A normal push to `master` does not run the suite. The squash merge of the Version Packages pull request does.
+CI runs on GitHub-hosted runners: `ubuntu-24.04-arm` for arm64 jobs and `ubuntu-latest` for x64 jobs. Validate runs typecheck, Effect diagnostics, lint, format, workflow lint, and e2e. Draft pull requests skip jobs. A pull request from a fork does not run the e2e job, because that job uses secrets. The Tegami version pull request skips tests. A normal push to `master` does not run the suite. The squash merge of the Version Packages pull request does.
 
 e2e secrets are `CLOUDFLARE_ACCOUNT_ID` and `CF_AI_GATEWAY_E2E_TOKEN`. Model variables are `E2E_DECISION_MODEL` and `E2E_LANGUAGE_MODEL`. The suite calls the account's default AI Gateway. `alchemy dev` in that job does not receive `CLOUDFLARE_API_TOKEN` or the account id. Release secrets are `RELEASE_APP_CLIENT_ID` and `RELEASE_APP_PRIVATE_KEY`. The version job has no GitHub environment. The publish job uses `alchemy-new`.
 

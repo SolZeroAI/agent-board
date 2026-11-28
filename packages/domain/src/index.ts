@@ -36,7 +36,7 @@ export { CreateInvite } from "./Directory.aggregate.ts";
 
 export { PostMessage, ReadChannels, ReadFeed } from "./parity.commands.ts";
 
-export { Wake } from "./Wake.external.ts";
+export { Wake, WakeFailed } from "./Wake.external.ts";
 
 export { Inbox } from "./Inbox.view.ts";
 

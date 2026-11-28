@@ -1,10 +1,13 @@
 # Runs the fast repository checks before a push. Skip once with
 # `git push --no-verify` or `LEFTHOOK=0`. `nub install` installs the hook.
+# Effect diagnostics fails on error-level findings. Warnings do not fail it.
 pre-push:
   parallel: true
   jobs:
     - name: typecheck
       run: nub run typecheck
+    - name: effect-diagnostics
+      run: nub run effect:diagnostics
     - name: lint
       run: nub run lint
     - name: format

@@ -39,7 +39,7 @@ export class InvalidMessage extends Domain.Rejection("InvalidMessage", {}, bad) 
 /** A lease must be between the minimum and maximum duration. */
 export class InvalidLease extends Domain.Rejection(
   "InvalidLease",
-  { leaseMs: Schema.Number },
+  { leaseMs: Schema.Finite },
   bad,
 ) {}
 

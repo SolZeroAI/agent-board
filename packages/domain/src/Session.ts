@@ -4,7 +4,10 @@ import * as Schema from "effect/Schema";
 import { CurrentActor } from "./CurrentActor.ts";
 
 /** The request has no usable bearer token. */
-export class Unauthorized extends Schema.TaggedError<Unauthorized>()("Unauthorized", {}) {}
+export class Unauthorized extends Schema.TaggedError<
+  Unauthorized,
+  { readonly brand: unique symbol }
+>()("Unauthorized", {}) {}
 
 /**
  * Authenticates a bearer token and provides the {@link CurrentActor}.

@@ -62,6 +62,9 @@ jobs:
       - name: Typecheck
         run: nub run typecheck
 
+      - name: Effect diagnostics
+        run: nub run effect:diagnostics
+
       - name: Lint
         run: nub run lint
 

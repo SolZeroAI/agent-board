@@ -15,20 +15,20 @@ import { Session } from "./Session.ts";
 export class WorkCompleted extends Domain.Event("WorkCompleted", {
   itemId: WorkItemId,
   agentId: AgentId,
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
 }) {}
 
 export class WorkFailed extends Domain.Event("WorkFailed", {
   itemId: WorkItemId,
   agentId: AgentId,
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
   reason: Schema.String,
 }) {}
 
 export class WorkReleased extends Domain.Event("WorkReleased", {
   itemId: WorkItemId,
   agentId: AgentId,
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
 }) {}
 
 /** Mark the caller's claimed item done and drop its lease. */

@@ -71,25 +71,29 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
     const directory = yield* Directory;
     const auth = yield* BoardAuth;
 
-    bindSignupAdmission((input) =>
-      Effect.runPromise(
-        directory
-          .send(
-            TEAM,
-            new RegisterAccount({
-              accountId: AccountId.make(input.userId),
-              name: input.name,
-              email: input.email,
-              ...(input.invite === undefined ? {} : { invite: input.invite }),
-              ...(input.seed ? { seed: true } : {}),
-            }),
-          )
-          .pipe(
-            Effect.map((receipt) => receipt.reply.role),
-            Effect.mapError((error) => new Error(error._tag)),
-          ),
-      ),
-    );
+    const registerAccount = (input: {
+      readonly userId: string;
+      readonly name: string;
+      readonly email: string;
+      readonly invite: string | undefined;
+      readonly seed: boolean;
+    }) =>
+      directory
+        .send(
+          TEAM,
+          new RegisterAccount({
+            accountId: AccountId.make(input.userId),
+            name: input.name,
+            email: input.email,
+            ...(input.invite === undefined ? {} : { invite: input.invite }),
+            ...(input.seed ? { seed: true } : {}),
+          }),
+        )
+        .pipe(Effect.map((receipt) => receipt.reply.role));
+
+    const context = yield* Effect.context<Effect.Services<ReturnType<typeof registerAccount>>>();
+
+    bindSignupAdmission((input) => Effect.runPromiseWith(context)(registerAccount(input)));
 
     const ownerEmail = yield* Config.String("BOARD_OWNER_EMAIL").pipe(
       Config.withDefault("owner@agent-board.test"),
@@ -110,10 +114,9 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
       fetch: Effect.gen(function* () {
         const ownerPassword = yield* Config.Redacted("BOARD_OWNER_PASSWORD").pipe(
           Effect.map((value) => Redacted.value(value).trim()),
-          Effect.flatMap((password) =>
-            password.length === 0
-              ? Effect.die(new Error("BOARD_OWNER_PASSWORD is required"))
-              : Effect.succeed(password),
+          Effect.filterOrElse(
+            (password) => password.length > 0,
+            () => Effect.die(new Error("BOARD_OWNER_PASSWORD is required")),
           ),
           Effect.orDie,
         );
@@ -160,9 +163,12 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
       }),
     };
   }).pipe(
-    Effect.provide(BoardLive),
-    Effect.provide(AuthLive),
-    Effect.provide(CloudflareD1(AuthDb)),
-    Effect.provide(RuntimeContext.phantom),
+    Effect.provide(
+      BoardLive.pipe(
+        Layer.provideMerge(AuthLive),
+        Layer.provideMerge(CloudflareD1(AuthDb)),
+        Layer.provideMerge(RuntimeContext.phantom),
+      ),
+    ),
   ),
 ) {}

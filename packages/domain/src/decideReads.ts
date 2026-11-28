@@ -9,11 +9,9 @@ import { can } from "./grants.ts";
 import { validChannel } from "./text.ts";
 
 const mark = (
-  kind: typeof ReadMarked.Type.kind,
+  kind: ReadMarked["kind"],
   actorJson: string,
-  fields: Partial<
-    Omit<typeof ReadMarked.Type, "_tag" | "kind" | "actorJson" | "includeBookkeeping">
-  >,
+  fields: Partial<Omit<ReadMarked, "_tag" | "kind" | "actorJson" | "includeBookkeeping">>,
   includeBookkeeping = false,
 ) =>
   new ReadMarked({
@@ -28,10 +26,8 @@ const mark = (
 export const decideRead = (
   state: State,
   boardId: string,
-  kind: typeof ReadMarked.Type.kind,
-  fields: Partial<
-    Omit<typeof ReadMarked.Type, "_tag" | "kind" | "actorJson" | "includeBookkeeping">
-  > = {},
+  kind: ReadMarked["kind"],
+  fields: Partial<Omit<ReadMarked, "_tag" | "kind" | "actorJson" | "includeBookkeeping">> = {},
   includeBookkeeping = false,
 ) =>
   Effect.gen(function* () {

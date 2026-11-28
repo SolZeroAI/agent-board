@@ -10,7 +10,7 @@ export class WorkPosted extends Domain.Event("WorkPosted", {
   title: Schema.String,
   body: Schema.String,
   authorId: AgentId,
-  seq: Schema.Number,
+  seq: Schema.Finite,
 }) {}
 
 /** Post a work item. It starts open. */
@@ -24,5 +24,5 @@ export class PostWork extends Domain.Command("PostWork", {
   },
   events: [WorkPosted],
   rejects: [BoardClosed, NotMember, InvalidWork],
-  reply: { itemId: WorkItemId, seq: Schema.Number },
+  reply: { itemId: WorkItemId, seq: Schema.Finite },
 }) {}

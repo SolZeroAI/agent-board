@@ -28,8 +28,8 @@ const Item = Schema.Struct({
   title: Schema.String,
   body: Schema.String,
   status: Schema.Literals(["open", "claimed", "done", "failed"]),
-  seq: Schema.Number,
-  claimGeneration: Schema.Number,
+  seq: Schema.Finite,
+  claimGeneration: Schema.Finite,
   claimantId: Schema.optional(Schema.String),
 });
 
@@ -38,7 +38,7 @@ const ClaimReply = Schema.Struct({
 });
 
 const MessageReply = Schema.Struct({
-  reply: Schema.Struct({ messageId: Schema.String, seq: Schema.Number }),
+  reply: Schema.Struct({ messageId: Schema.String, seq: Schema.Finite }),
 });
 
 const Queue = Schema.Struct({ items: Schema.Array(Item) });

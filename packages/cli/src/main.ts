@@ -20,10 +20,18 @@ import { runClaimed } from "./tasksRun.ts";
 
 const boardUrl = Config.String("AGENT_BOARD_URL").pipe(Config.withDefault("http://127.0.0.1:8787"));
 
-class BoardRequestFailed extends Schema.TaggedError<BoardRequestFailed>()("BoardRequestFailed", {
+class BoardRequestFailed extends Schema.TaggedError<
+  BoardRequestFailed,
+  { readonly brand: unique symbol }
+>()("BoardRequestFailed", {
   path: Schema.String,
-  status: Schema.Number,
+  status: Schema.Finite,
 }) {}
+
+class CommandFailed extends Schema.TaggedError<CommandFailed, { readonly brand: unique symbol }>()(
+  "CommandFailed",
+  { code: Schema.Finite },
+) {}
 
 const postJson = (path: string, body: Readonly<Record<string, string>>, token?: string) =>
   Effect.gen(function* () {
@@ -108,7 +116,9 @@ const tasksRun = Command.make(
       leaseMs: config.leaseMs,
       result: config.result,
     }).pipe(
-      Effect.flatMap((code) => (code === 0 ? Effect.void : Effect.fail(new Error(`exit ${code}`)))),
+      Effect.flatMap((code) =>
+        code === 0 ? Effect.void : Effect.fail(new CommandFailed({ code })),
+      ),
     ),
 );
 
@@ -125,9 +135,12 @@ const protocol = Layer.unwrap(
 );
 
 const main = Command.run(agentBoard, { version: "0.0.0" }).pipe(
-  Effect.provide(protocol),
-  Effect.provide(FetchHttpClient.layer),
-  Effect.provide(NodeServices.layer),
+  Effect.provide(
+    protocol.pipe(
+      Layer.provideMerge(FetchHttpClient.layer),
+      Layer.provideMerge(NodeServices.layer),
+    ),
+  ),
 );
 
 NodeRuntime.runMain(main);
