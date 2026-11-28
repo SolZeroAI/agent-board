@@ -117,76 +117,13 @@ jobs:
       github.event.workflow_run.head_repository.full_name == github.repository &&
       needs.release.outputs.published == 'true' &&
       needs.release.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    environment: alchemy-new
     permissions:
       contents: read
       id-token: write
-    steps:
-      - name: Check out release commit
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.release.outputs.sha }}
-
-      - name: Set up Nub
-        uses: nubjs/setup-nub@v0
-        with:
-          nub-version: 0.10.0
-          node-version-file: .nvmrc
-          cache-dependency-path: nub.lock
-
-      - name: Install, build, and prune production dependencies
-        env:
-          NPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE: "false"
-        run: |
-          nub install --frozen-lockfile
-          nub run build
-          nub prune --prod
-
-      # The ready archive is the pruned tree. These excludes drop files the
-      # deploy does not load. Node still resolves every package the stack imports.
-      - name: Publish to alchemy.new
-        uses: SolZeroAI/alchemy-new-publish-action@v1
-        with:
-          registry-url: https://alchemy.new
-          version: ${{ needs.release.outputs.version }}
-          path: .
-          manifest: alchemy.new.jsonc
-          exclude: |
-            **/*.md
-            **/*.map
-            node_modules/**/*.ts
-            node_modules/**/*.tsx
-            node_modules/**/*.mts
-            node_modules/**/*.cts
-            # Node loads these Alchemy subpaths as TypeScript, and the TanStack
-            # Start Vite plugin loads these entries while it builds the site.
-            !node_modules/**/alchemy/src/Runtime/Bootstrap.ts
-            !node_modules/**/alchemy/src/Runtime/ManagedHttpShutdown.ts
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**/*.ts
-            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**
-            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.ts
-            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.tsx
-            # Duplicate of @cloudflare/workerd-linux-64. The stack resolves that package when it loads.
-            node_modules/.store/workerd@*/node_modules/workerd/bin/workerd
-            # esbuild's JavaScript API loads @esbuild/linux-x64. This path is a second copy.
-            node_modules/.store/esbuild@*/node_modules/esbuild/bin/esbuild
-            # TypeScript's native binary. Alchemy transpiles the stack with Oxc.
-            node_modules/.store/@typescript+typescript-linux-x64@*
-            # sharp is a dynamic import of the local Images binding. This stack does not use it.
-            node_modules/.store/@img+sharp-libvips-linux-*@*
-            node_modules/.store/@img+sharp-linux-*@*
-            # Prettier loads the Flow plugin only when the parser is Flow.
-            node_modules/**/prettier/plugins/flow.js
-            node_modules/**/prettier/plugins/flow.mjs
-            # React's package exports resolve the production build unless a bundler sets the development condition.
-            node_modules/**/*.development.js
-            docs/**
-            features/**
-            scripts/**
-            third-party/**
-            e2e.config.ts
-            packages/cli/**
-            packages/sdk/**
+    cache-mode: read
+    uses: ./.github/workflows/alchemy-new-archive.yml
+    with:
+      validate-only: false
+      ref: ${{ needs.release.outputs.sha }}
+      environment: alchemy-new
+      cache: false
