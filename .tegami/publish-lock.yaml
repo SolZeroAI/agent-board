@@ -1,9 +1,9 @@
 core:changelogs:
-  - content: "---\npackages:\n  release:agent-board:\n    type: minor\n---\n\n## Publish the first registry version\n\nAgent Board is available in the alchemy.new registry as `solzero/agent-board` version 0.1.0. Choose that version and deploy it to your Cloudflare account. This is the first published version, so there is no earlier release to upgrade.\n"
-    filename: 2026-11-28-first-registry-release.md
+  - content: "---\npackages:\n  release:agent-board:\n    type: patch\n---\n\n## Add search tags for alchemy.new\n\nSearch on alchemy.new matches this release for agents, tasks, and work queues. Cloudflare and Durable Objects stay in the project description. No change is required on a board that is already deployed.\n"
+    filename: 2026-11-28-add-search-tags.md
     v: 0.0.0
 core:packages:
   - changelogIds:
-      - 2026-11-28-first-registry-release.md
+      - 2026-11-28-add-search-tags.md
     id: release:agent-board
     updated: true
