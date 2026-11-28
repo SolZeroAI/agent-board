@@ -1,0 +1,113 @@
+name: Pack alchemy.new archive
+
+on:
+  workflow_call:
+    inputs:
+      validate-only:
+        description: Run the deploy check and do not publish.
+        type: boolean
+        default: false
+      ref:
+        description: Commit to check out.
+        type: string
+        required: true
+      environment:
+        description: GitHub environment. Empty runs the job with no environment.
+        type: string
+        default: ""
+      cache:
+        description: Cache the nub store. Publish runs with this off.
+        type: boolean
+        default: true
+
+jobs:
+  archive:
+    name: ${{ inputs.validate-only && 'Pack and validate' || 'Publish to alchemy.new' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Set up Nub
+        uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.10.0
+          node-version-file: .nvmrc
+          node-version: "24.15.0"
+          cache: ${{ inputs.cache && 'true' || 'false' }}
+          cache-dependency-path: nub.lock
+
+      - name: Install, build, and prune production dependencies
+        env:
+          NPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE: "false"
+        run: |
+          nub install --frozen-lockfile
+          nub run build
+          nub prune --prod
+
+      - name: Read VERSION
+        id: version
+        run: echo "version=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
+
+      # One exclude list for the pull request check and the publish.
+      # registry-url: https://alchemy.new (api.alchemy.new does not serve the API)
+      # OIDC audience: https://alchemy.new/registry/publish
+      # OIDC issuer: https://token.actions.githubusercontent.com
+      # Exchange: POST https://alchemy.new/v1/oidc/github/exchange
+      # validate stays at its default. validate-only skips the registry.
+      - name: ${{ inputs.validate-only && 'Validate the archive' || 'Publish to alchemy.new' }}
+        uses: SolZeroAI/alchemy-new-publish-action@v1
+        with:
+          registry-url: https://alchemy.new
+          version: ${{ steps.version.outputs.version }}
+          path: .
+          manifest: alchemy.new.jsonc
+          validate-only: ${{ inputs.validate-only }}
+          exclude: |
+            **/*.md
+            **/*.map
+            node_modules/**/*.ts
+            node_modules/**/*.tsx
+            node_modules/**/*.mts
+            node_modules/**/*.cts
+            # Node loads Alchemy's runtime bootstrap as TypeScript. The Worker
+            # bundler resolves the `worker` export condition, which points
+            # `@alchemy.run/cloudflare/Bridge` and `@alchemy.run/better-auth/*`
+            # at TypeScript sources. The generated entry imports Bridge.
+            !node_modules/**/alchemy/src/Runtime/Bootstrap.ts
+            !node_modules/**/alchemy/src/Runtime/ManagedHttpShutdown.ts
+            !node_modules/**/@alchemy.run/cloudflare/src/**
+            !node_modules/**/@alchemy.run/cloudflare/src/**/*.ts
+            !node_modules/**/@alchemy.run/cloudflare/src/**/*.tsx
+            !node_modules/**/@alchemy.run/better-auth/src/**
+            !node_modules/**/@alchemy.run/better-auth/src/**/*.ts
+            !node_modules/**/@alchemy.run/better-auth/src/**/*.tsx
+            # The TanStack Start Vite plugin loads these entries while it builds the site.
+            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**
+            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.ts
+            !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.tsx
+            # Duplicate of @cloudflare/workerd-linux-64. The stack resolves that package when it loads.
+            node_modules/.store/workerd@*/node_modules/workerd/bin/workerd
+            # esbuild's JavaScript API loads @esbuild/linux-x64. This path is a second copy.
+            node_modules/.store/esbuild@*/node_modules/esbuild/bin/esbuild
+            # TypeScript's native binary. Alchemy transpiles the stack with Oxc.
+            node_modules/.store/@typescript+typescript-linux-x64@*
+            # sharp is a dynamic import of the local Images binding. This stack does not use it.
+            node_modules/.store/@img+sharp-libvips-linux-*@*
+            node_modules/.store/@img+sharp-linux-*@*
+            # Prettier loads the Flow plugin only when the parser is Flow.
+            node_modules/**/prettier/plugins/flow.js
+            node_modules/**/prettier/plugins/flow.mjs
+            # React's package exports resolve the production build unless a bundler sets the development condition.
+            node_modules/**/*.development.js
+            docs/**
+            features/**
+            scripts/**
+            third-party/**
+            e2e.config.ts
+            packages/cli/**
+            packages/sdk/**

@@ -1,0 +1,23 @@
+name: Validate alchemy.new deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alchemy-new-validate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Pack and validate
+    if: github.event.pull_request.draft == false
+    permissions:
+      contents: read
+    uses: ./.github/workflows/alchemy-new-archive.yml
+    with:
+      validate-only: true
+      ref: ${{ github.event.pull_request.head.sha }}
