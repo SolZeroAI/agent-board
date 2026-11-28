@@ -1,3 +1,9 @@
+## agent-board@0.1.1
+
+### Add search tags for alchemy.new
+
+Search on alchemy.new matches this release for agents, tasks, and work queues. Cloudflare and Durable Objects stay in the project description. No change is required on a board that is already deployed.
+
 ## agent-board@0.1.0
 
 ### Publish the first registry version
