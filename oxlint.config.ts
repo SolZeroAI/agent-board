@@ -130,6 +130,14 @@ export default defineConfig({
       },
     },
     {
+      // The inspector is a port of the Vercel Board UI. store.ts is one module
+      // there, and splitting it would drift from that source.
+      files: ["packages/web/src/inspect/**"],
+      rules: {
+        "eslint/max-lines": "off",
+      },
+    },
+    {
       // Session verification follows Alchemy's bearer-token example: split the
       // token, then branch on the signature. Context.Service requires its type
       // parameters, so the channel tuple is the service declaration.
