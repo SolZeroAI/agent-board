@@ -13,19 +13,22 @@ importers:
         version: link:packages/server
       '@alchemy.run/cloudflare':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))
+        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
       '@alchemy.run/domain':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       '@effect/platform-node':
         specifier: 4.1.2
         version: 4.1.2(effect@4.1.2)(redis@6.4.0)
       alchemy:
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect:
         specifier: 4.1.2
         version: 4.1.2
+      vite:
+        specifier: 7.3.7
+        version: 7.3.7(@types/node@24.10.1)
     devDependencies:
       '@ai-sdk/anthropic':
         specifier: 4.0.95
@@ -95,7 +98,7 @@ importers:
         version: link:../domain
       '@alchemy.run/domain':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       '@effect/platform-node':
         specifier: 4.1.2
         version: 4.1.2(effect@4.1.2)(redis@6.4.0)
@@ -107,7 +110,7 @@ importers:
     dependencies:
       '@alchemy.run/domain':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       effect:
         specifier: 4.1.2
         version: 4.1.2
@@ -121,16 +124,16 @@ importers:
         version: link:../domain
       '@alchemy.run/better-auth':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(better-auth@1.7.7)(effect@4.1.2)(kysely@0.28.17)(typescript@7.0.2)
+        version: 2.0.0-beta.85(@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(better-auth@1.7.7)(effect@4.1.2)(kysely@0.28.17)(typescript@7.0.2)
       '@alchemy.run/cloudflare':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))
+        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
       '@alchemy.run/domain':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+        version: 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       alchemy:
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       better-auth:
         specifier: 1.7.7
         version: 1.7.7
@@ -140,12 +143,15 @@ importers:
       kysely:
         specifier: 0.28.17
         version: 0.28.17
+      vite:
+        specifier: 7.3.7
+        version: 7.3.7(@types/node@24.10.1)
 
   packages/web:
     dependencies:
       '@alchemy.run/cloudflare':
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(@types/react@19.2.7)(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
+        version: 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
       '@base-ui/react':
         specifier: 1.9.0
         version: 1.9.0(@types/react@19.2.7)(react@19.2.0)(react-dom@19.2.0(react@19.2.0))
@@ -155,18 +161,12 @@ importers:
       '@tanstack/react-start':
         specifier: 1.139.3
         version: 1.139.3(@tanstack/virtual-file-routes@1.139.0)(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(tsx@4.23.15)(vite@7.3.7(@types/node@24.10.1))
-      '@types/react':
-        specifier: 19.2.7
-        version: 19.2.7
-      '@types/react-dom':
-        specifier: 19.2.3
-        version: 19.2.3(@types/react@19.2.7)
       '@vitejs/plugin-react':
         specifier: 5.1.1
         version: 5.1.1(vite@7.3.7(@types/node@24.10.1))
       alchemy:
         specifier: 2.0.0-beta.85
-        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(@types/react@19.2.7)(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1))
+        version: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       better-auth:
         specifier: 1.7.7
         version: 1.7.7(@tanstack/react-start@1.139.3(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(vite@7.3.7(@types/node@24.10.1)))(@tanstack/virtual-file-routes@1.139.0)(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(tsx@4.23.15)
@@ -194,6 +194,13 @@ importers:
       vite:
         specifier: 7.3.7
         version: 7.3.7(@types/node@24.10.1)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.7
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.7)
 
 packages:
 
@@ -712,8 +719,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@5.20261125.1':
-    resolution: {integrity: sha512-FBFIY/srJZZtZjxyH56AerZ0ZDbhr6Ifa5O707q0f7YzHmzqd+2zD3vG6d8cAcSDL/heJvsP7eEAsYRLFd7jpw==}
+  '@cloudflare/workers-types@5.20261127.1':
+    resolution: {integrity: sha512-G0vZByiP+V6JvPdyf1d7kPYow3yOk4vZV0PRiFhBeRjVjCT1uVJurKTpJca2WVTnb2TsicHdpC3KeHhwSciIlg==}
 
   '@distilled.cloud/acme@1.0.0-rc.18':
     resolution: {integrity: sha512-OWO6NG9IcpDqZCzlrN5T4MIQqSbpZ5cw61Ru/dYn1vr3AIyx3Vlg+Ew8NhlunpURr4wqDUW2/7QW3fKbrmfwLg==}
@@ -778,19 +785,13 @@ packages:
       effect: ^4.1.2
       redis: '>=5.1.0 <7.0.0'
 
-  '@effect/sql-d1@4.1.6':
-    resolution: {integrity: sha512-7nn84oHJNRYBHZN3hneKr2/Tpwh2UXfP5+Mg6x+MHZT7WkLVIW8/BY0U8XG33d1RmeuQ3U+wwV90g5tsi8JJYQ==}
+  '@effect/sql-d1@4.1.7':
+    resolution: {integrity: sha512-qv+D3+xktP+7vVlUKnNiX5NQhyu0nPtyHgtl/C0xMPrdWodiOZUCtCa6ciY0bjLSTPF1ZUjJLRaGOXxGH0h4Tw==}
     peerDependencies:
-      effect: ^4.1.6
+      effect: ^4.1.7
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
-
-  '@esbuild/aix-ppc64@0.25.12':
-    resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
-    engines: {node: '>=18'}
-    cpu: [ppc64]
-    os: [aix]
 
   '@esbuild/aix-ppc64@0.28.2':
     resolution: {integrity: sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==}
@@ -798,22 +799,10 @@ packages:
     cpu: [ppc64]
     os: [aix]
 
-  '@esbuild/android-arm64@0.25.12':
-    resolution: {integrity: sha512-6AAmLG7zwD1Z159jCKPvAxZd4y/VTO0VkprYy+3N2FtJ8+BQWFXU+OxARIwA46c5tdD9SsKGZ/1ocqBS/gAKHg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [android]
-
   '@esbuild/android-arm64@0.28.2':
     resolution: {integrity: sha512-5YfKeeI8qWfBZIX+u2xZC3Zlb3Os/gLS2sbEKM+I4ZOcsWmHS2WLysCcQZDAFRslDUU5Oiq44gf6PYN1vGwG5A==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [android]
-
-  '@esbuild/android-arm@0.25.12':
-    resolution: {integrity: sha512-VJ+sKvNA/GE7Ccacc9Cha7bpS8nyzVv0jdVgwNDaR4gDMC/2TTRc33Ip8qrNYUcpkOHUT5OZ0bUcNNVZQ9RLlg==}
-    engines: {node: '>=18'}
-    cpu: [arm]
     os: [android]
 
   '@esbuild/android-arm@0.28.2':
@@ -822,34 +811,16 @@ packages:
     cpu: [arm]
     os: [android]
 
-  '@esbuild/android-x64@0.25.12':
-    resolution: {integrity: sha512-5jbb+2hhDHx5phYR2By8GTWEzn6I9UqR11Kwf22iKbNpYrsmRB18aX/9ivc5cabcUiAT/wM+YIZ6SG9QO6a8kg==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [android]
-
   '@esbuild/android-x64@0.28.2':
     resolution: {integrity: sha512-O387ite7SzUyCcy3JQX4P4bLtEA7bLLkx+esve5JHnyYfNTxcVpXZo9jhdB0lTKN44gztELTdU7nS8Nr16Fs1Q==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [android]
 
-  '@esbuild/darwin-arm64@0.25.12':
-    resolution: {integrity: sha512-N3zl+lxHCifgIlcMUP5016ESkeQjLj/959RxxNYIthIg+CQHInujFuXeWbWMgnTo4cp5XVHqFPmpyu9J65C1Yg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [darwin]
-
   '@esbuild/darwin-arm64@0.28.2':
     resolution: {integrity: sha512-n4KqkOQrraxHJcgjM1RvwbigfQKIKJVpM7xp+KsxiyUSrRdIXnt73VhrPAx0fV44hgfmIVKjxMN9J1t5jySVkw==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [darwin]
-
-  '@esbuild/darwin-x64@0.25.12':
-    resolution: {integrity: sha512-HQ9ka4Kx21qHXwtlTUVbKJOAnmG1ipXhdWTmNXiPzPfWKpXqASVcWdnf2bnL73wgjNrFXAa3yYvBSd9pzfEIpA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
     os: [darwin]
 
   '@esbuild/darwin-x64@0.28.2':
@@ -858,22 +829,10 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@esbuild/freebsd-arm64@0.25.12':
-    resolution: {integrity: sha512-gA0Bx759+7Jve03K1S0vkOu5Lg/85dou3EseOGUes8flVOGxbhDDh/iZaoek11Y8mtyKPGF3vP8XhnkDEAmzeg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [freebsd]
-
   '@esbuild/freebsd-arm64@0.28.2':
     resolution: {integrity: sha512-n+I0BTSRIoy+d6RPKnEVwql5UwBJolytvY4mAOIEJorKlqgPII8ix6slVVrfZ5Tnj7glIZvloylbB/EJPMWEXw==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [freebsd]
-
-  '@esbuild/freebsd-x64@0.25.12':
-    resolution: {integrity: sha512-TGbO26Yw2xsHzxtbVFGEXBFH0FRAP7gtcPE7P5yP7wGy7cXK2oO7RyOhL5NLiqTlBh47XhmIUXuGciXEqYFfBQ==}
-    engines: {node: '>=18'}
-    cpu: [x64]
     os: [freebsd]
 
   '@esbuild/freebsd-x64@0.28.2':
@@ -882,22 +841,10 @@ packages:
     cpu: [x64]
     os: [freebsd]
 
-  '@esbuild/linux-arm64@0.25.12':
-    resolution: {integrity: sha512-8bwX7a8FghIgrupcxb4aUmYDLp8pX06rGh5HqDT7bB+8Rdells6mHvrFHHW2JAOPZUbnjUpKTLg6ECyzvas2AQ==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [linux]
-
   '@esbuild/linux-arm64@0.28.2':
     resolution: {integrity: sha512-pW4AC0P3it8c7do9MVM4p51FzHzdM/TZrerurgRcHJ2WTa1VQ1CIq18xncfpBJw4ojkiZZrKW2yIBWBP92j6Ug==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [linux]
-
-  '@esbuild/linux-arm@0.25.12':
-    resolution: {integrity: sha512-lPDGyC1JPDou8kGcywY0YILzWlhhnRjdof3UlcoqYmS9El818LLfJJc3PXXgZHrHCAKs/Z2SeZtDJr5MrkxtOw==}
-    engines: {node: '>=18'}
-    cpu: [arm]
     os: [linux]
 
   '@esbuild/linux-arm@0.28.2':
@@ -906,22 +853,10 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@esbuild/linux-ia32@0.25.12':
-    resolution: {integrity: sha512-0y9KrdVnbMM2/vG8KfU0byhUN+EFCny9+8g202gYqSSVMonbsCfLjUO+rCci7pM0WBEtz+oK/PIwHkzxkyharA==}
-    engines: {node: '>=18'}
-    cpu: [ia32]
-    os: [linux]
-
   '@esbuild/linux-ia32@0.28.2':
     resolution: {integrity: sha512-CYbnj78HsIeA+DhgUKgFCfvNsTHFhMMrinUrMZpDXJXKN8T3XViTZ/+wtHeVxEWY8ewSzTFN+nRmSwO2tZaLUQ==}
     engines: {node: '>=18'}
     cpu: [ia32]
-    os: [linux]
-
-  '@esbuild/linux-loong64@0.25.12':
-    resolution: {integrity: sha512-h///Lr5a9rib/v1GGqXVGzjL4TMvVTv+s1DPoxQdz7l/AYv6LDSxdIwzxkrPW438oUXiDtwM10o9PmwS/6Z0Ng==}
-    engines: {node: '>=18'}
-    cpu: [loong64]
     os: [linux]
 
   '@esbuild/linux-loong64@0.28.2':
@@ -930,22 +865,10 @@ packages:
     cpu: [loong64]
     os: [linux]
 
-  '@esbuild/linux-mips64el@0.25.12':
-    resolution: {integrity: sha512-iyRrM1Pzy9GFMDLsXn1iHUm18nhKnNMWscjmp4+hpafcZjrr2WbT//d20xaGljXDBYHqRcl8HnxbX6uaA/eGVw==}
-    engines: {node: '>=18'}
-    cpu: [mips64el]
-    os: [linux]
-
   '@esbuild/linux-mips64el@0.28.2':
     resolution: {integrity: sha512-ZVykbDyk7519VwiNb9Lcj9m8XM6v5V9uKPvrEMkkEedVewf+0itkhahp4HDpgERXhwLRpWFypsGbG/J8s0QjJA==}
     engines: {node: '>=18'}
     cpu: [mips64el]
-    os: [linux]
-
-  '@esbuild/linux-ppc64@0.25.12':
-    resolution: {integrity: sha512-9meM/lRXxMi5PSUqEXRCtVjEZBGwB7P/D4yT8UG/mwIdze2aV4Vo6U5gD3+RsoHXKkHCfSxZKzmDssVlRj1QQA==}
-    engines: {node: '>=18'}
-    cpu: [ppc64]
     os: [linux]
 
   '@esbuild/linux-ppc64@0.28.2':
@@ -954,22 +877,10 @@ packages:
     cpu: [ppc64]
     os: [linux]
 
-  '@esbuild/linux-riscv64@0.25.12':
-    resolution: {integrity: sha512-Zr7KR4hgKUpWAwb1f3o5ygT04MzqVrGEGXGLnj15YQDJErYu/BGg+wmFlIDOdJp0PmB0lLvxFIOXZgFRrdjR0w==}
-    engines: {node: '>=18'}
-    cpu: [riscv64]
-    os: [linux]
-
   '@esbuild/linux-riscv64@0.28.2':
     resolution: {integrity: sha512-GeXCej4IQtU1B+QlDV8W/RRvbzI3O/Stss+/bCXv4lZls5WGRtu2a+3JkA3i4qIUlMXpcHebWpF8AkJhATowuA==}
     engines: {node: '>=18'}
     cpu: [riscv64]
-    os: [linux]
-
-  '@esbuild/linux-s390x@0.25.12':
-    resolution: {integrity: sha512-MsKncOcgTNvdtiISc/jZs/Zf8d0cl/t3gYWX8J9ubBnVOwlk65UIEEvgBORTiljloIWnBzLs4qhzPkJcitIzIg==}
-    engines: {node: '>=18'}
-    cpu: [s390x]
     os: [linux]
 
   '@esbuild/linux-s390x@0.28.2':
@@ -978,34 +889,16 @@ packages:
     cpu: [s390x]
     os: [linux]
 
-  '@esbuild/linux-x64@0.25.12':
-    resolution: {integrity: sha512-uqZMTLr/zR/ed4jIGnwSLkaHmPjOjJvnm6TVVitAa08SLS9Z0VM8wIRx7gWbJB5/J54YuIMInDquWyYvQLZkgw==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [linux]
-
   '@esbuild/linux-x64@0.28.2':
     resolution: {integrity: sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [linux]
 
-  '@esbuild/netbsd-arm64@0.25.12':
-    resolution: {integrity: sha512-xXwcTq4GhRM7J9A8Gv5boanHhRa/Q9KLVmcyXHCTaM4wKfIpWkdXiMog/KsnxzJ0A1+nD+zoecuzqPmCRyBGjg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [netbsd]
-
   '@esbuild/netbsd-arm64@0.28.2':
     resolution: {integrity: sha512-sSATRjPeDBg3pdgHoQfoYBob11Kk1FGa9lui5RIHZCoCkJa9QKlvl3/vKz2usCmYYjs7ymJR/2Nnsqe+Hjt5nw==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [netbsd]
-
-  '@esbuild/netbsd-x64@0.25.12':
-    resolution: {integrity: sha512-Ld5pTlzPy3YwGec4OuHh1aCVCRvOXdH8DgRjfDy/oumVovmuSzWfnSJg+VtakB9Cm0gxNO9BzWkj6mtO1FMXkQ==}
-    engines: {node: '>=18'}
-    cpu: [x64]
     os: [netbsd]
 
   '@esbuild/netbsd-x64@0.28.2':
@@ -1014,22 +907,10 @@ packages:
     cpu: [x64]
     os: [netbsd]
 
-  '@esbuild/openbsd-arm64@0.25.12':
-    resolution: {integrity: sha512-fF96T6KsBo/pkQI950FARU9apGNTSlZGsv1jZBAlcLL1MLjLNIWPBkj5NlSz8aAzYKg+eNqknrUJ24QBybeR5A==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [openbsd]
-
   '@esbuild/openbsd-arm64@0.28.2':
     resolution: {integrity: sha512-AL2qJILH7lNjrDmCQDvdxMfAUIv8KMNZOvrwAQ8i8//ntL9FflhOyMJ8OZSMBb8/AWXe3/5v5S20y3zCoZWKoQ==}
     engines: {node: '>=18'}
     cpu: [arm64]
-    os: [openbsd]
-
-  '@esbuild/openbsd-x64@0.25.12':
-    resolution: {integrity: sha512-MZyXUkZHjQxUvzK7rN8DJ3SRmrVrke8ZyRusHlP+kuwqTcfWLyqMOE3sScPPyeIXN/mDJIfGXvcMqCgYKekoQw==}
-    engines: {node: '>=18'}
-    cpu: [x64]
     os: [openbsd]
 
   '@esbuild/openbsd-x64@0.28.2':
@@ -1038,23 +919,11 @@ packages:
     cpu: [x64]
     os: [openbsd]
 
-  '@esbuild/openharmony-arm64@0.25.12':
-    resolution: {integrity: sha512-rm0YWsqUSRrjncSXGA7Zv78Nbnw4XL6/dzr20cyrQf7ZmRcsovpcRBdhD43Nuk3y7XIoW2OxMVvwuRvk9XdASg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [openharmony]
-
   '@esbuild/openharmony-arm64@0.28.2':
     resolution: {integrity: sha512-WkhYDmpTjLvGlScA1rwjRUmhl4k8oXR3cIbtqWmELgU/dFeHHlEllxDvdWcNJV9rbzCexB5vz8gtNewWLgCT7Q==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [openharmony]
-
-  '@esbuild/sunos-x64@0.25.12':
-    resolution: {integrity: sha512-3wGSCDyuTHQUzt0nV7bocDy72r2lI33QL3gkDNGkod22EsYl04sMf0qLb8luNKTOmgF/eDEDP5BFNwoBKH441w==}
-    engines: {node: '>=18'}
-    cpu: [x64]
-    os: [sunos]
 
   '@esbuild/sunos-x64@0.28.2':
     resolution: {integrity: sha512-GPMSkTOtMnv2U2F8gxe4Io6qmVs+YKyp832Etqqxr0hFngmXQ3rzwytelm3GIn7T4VviRUlf3sOgBOiTdvaf7g==}
@@ -1062,34 +931,16 @@ packages:
     cpu: [x64]
     os: [sunos]
 
-  '@esbuild/win32-arm64@0.25.12':
-    resolution: {integrity: sha512-rMmLrur64A7+DKlnSuwqUdRKyd3UE7oPJZmnljqEptesKM8wx9J8gx5u0+9Pq0fQQW8vqeKebwNXdfOyP+8Bsg==}
-    engines: {node: '>=18'}
-    cpu: [arm64]
-    os: [win32]
-
   '@esbuild/win32-arm64@0.28.2':
     resolution: {integrity: sha512-PIhhEkE9uPBleRBrQEJpUn7MBnibZzbGzYWPmY3x+YoVg/95zbjB4CxPPOQ8l5tYYM4mMaCthF8/1DIfBQQyWQ==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [win32]
 
-  '@esbuild/win32-ia32@0.25.12':
-    resolution: {integrity: sha512-HkqnmmBoCbCwxUKKNPBixiWDGCpQGVsrQfJoVGYLPT41XWF8lHuE5N6WhVia2n4o5QK5M4tYr21827fNhi4byQ==}
-    engines: {node: '>=18'}
-    cpu: [ia32]
-    os: [win32]
-
   '@esbuild/win32-ia32@0.28.2':
     resolution: {integrity: sha512-YmJbfTlvU7Sdn9BB+4PRES4oB6pxgS37MAONj+hBr/cpXS1aBPKXxNnDbu+QCWPj0o9dgyxeq79g6c5P8KeuYA==}
     engines: {node: '>=18'}
     cpu: [ia32]
-    os: [win32]
-
-  '@esbuild/win32-x64@0.25.12':
-    resolution: {integrity: sha512-alJC0uCZpTFrSL0CCDjcgleBXPnCrEAhTBILpeAp7M/OFgoqtAetfBzX0xM00MUsVVPpVjlPuMbREqnZCXaTnA==}
-    engines: {node: '>=18'}
-    cpu: [x64]
     os: [win32]
 
   '@esbuild/win32-x64@0.28.2':
@@ -2930,16 +2781,6 @@ packages:
     resolution: {integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==}
     engines: {node: '>=0.12'}
 
-  esbuild@0.25.12:
-    resolution: {integrity: sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      pnpapi: '*'
-    peerDependenciesMeta:
-      pnpapi:
-        optional: true
-
   esbuild@0.28.2:
     resolution: {integrity: sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==}
     engines: {node: '>=18'}
@@ -3131,10 +2972,6 @@ packages:
     resolution: {integrity: sha512-nbD8lB9EB3wNdMhOCdx5Li8DxnLbvKByylRLcJ1h+4SkrowVeECAyZlyiKMThF7xFdRz0jSQ2MoJr+wXux2y0Q==}
     engines: {node: '>=20.0.0'}
 
-  kysely@0.29.9:
-    resolution: {integrity: sha512-K48ErswC3MlIcBqR0pYIIEl+n9rIgwxgzaM1FxKHMXn7egxr1NHj7bCeF98mXl9A3/QoL5I7mo5S/mLXgeDgGA==}
-    engines: {node: '>=22.0.0'}
-
   lefthook-android-arm64@2.2.4:
     resolution: {integrity: sha512-bQX3VQiTVoWim+TkmpQVt0U9WvwrZ6UQfMnJZkWKLDafKaYus/jnFZteZUx56LqksA/iQy7qKlwq4/LjQ4MvGQ==}
     cpu: [arm64]
@@ -3261,8 +3098,8 @@ packages:
   mdast-util-to-hast@13.2.2:
     resolution: {integrity: sha512-l2pnmOuqs+SGLVpTVXnRLQu5v1AzvDe181404fbXzzqObVxrAnnVxapAP27pUwzLBL/ABIkgUhGlPVU7QSvIFg==}
 
-  mdast-util-to-markdown@2.2.4:
-    resolution: {integrity: sha512-aCsogoZ2Oz1EItAlC12A+/uGuzp+CWlDU0xZ3o5jbJaepLsOu2tlxpvHslnX5dRhspD1gxNVkBtYG0yMiIpXoQ==}
+  mdast-util-to-markdown@2.2.5:
+    resolution: {integrity: sha512-mxOMQQ8NgisvTarkSUqZwi6GmzNo490V932DpEK/0+OETIeVJBzq4QuMt45fqqcsF5EYMlJENjSSAZxh89VJsg==}
 
   mdast-util-to-string@4.0.0:
     resolution: {integrity: sha512-0H44vDimn51F0YwvxSJSm0eCDOJTRlmN0R1yBh4HLj9wiV1Dn0QoXGbvFAWj2hSItVTlCmBF1hqKlIyUBVFLPg==}
@@ -3359,8 +3196,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  modern-tar@0.8.6:
-    resolution: {integrity: sha512-LYSks0tNVqbtez/9OB0YFP6qLRSqkdAxJWOQpVaR67lNTbj2zNLyYpowkRMia5lXLCZKzxwoxkxH2MbbBR2aEg==}
+  modern-tar@0.8.7:
+    resolution: {integrity: sha512-q17gyzLiCw2wf/Rcl5c3EA5ynB2hOHb5+qMpbaILOQBaTiBx9bumfXC5sMk0wQrVoLtlBhW77dJTnLArlczsGg==}
     engines: {node: '>=18.0.0'}
 
   ms@2.1.3:
@@ -3501,8 +3338,8 @@ packages:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
     engines: {node: '>=14.19.0'}
 
-  postcss@8.5.33:
-    resolution: {integrity: sha512-RVHEU9/Pp1Fnjr/MpAJsZoADukCKhfIi15OunEYiGktIkYLkPVvC1sioWolGDS7XByMTx9m/IGbro0Js13zhnQ==}
+  postcss@8.5.34:
+    resolution: {integrity: sha512-P1Qzj0XXZjMda74C7qiVnBG90UKNbyNUAOeQRBW8X63RsIMV57gevRqjnkELdwtZ/S2/uQFksJhmwuN8xShLPw==}
     engines: {node: ^10 || ^12 || >=14}
 
   prettier@3.10.1:
@@ -3808,49 +3645,6 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
-  vite@7.2.4:
-    resolution: {integrity: sha512-NL8jTlbo0Tn4dUEXEsUg8KeyG/Lkmc4Fnzb8JXN/Ykm9G4HNImjtABMJgkQoVjOBN/j2WAwDTRytdqJbZsah7w==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^20.19.0 || >=22.12.0
-      jiti: '>=1.21.0'
-      less: ^4.0.0
-      lightningcss: ^1.21.0
-      pnpapi: '*'
-      sass: ^1.70.0
-      sass-embedded: ^1.70.0
-      stylus: '>=0.54.8'
-      sugarss: ^5.0.0
-      terser: ^5.16.0
-      tsx: ^4.8.1
-      yaml: ^2.4.2
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      jiti:
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      pnpapi:
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-      tsx:
-        optional: true
-      yaml:
-        optional: true
-
   vite@7.3.7:
     resolution: {integrity: sha512-AHEzTORMbi7/7aXp7w7KZ5+DCUdSeLsJz0grY8xHpc9DHdYb0vQu6DqJfm2tOw3gDExNgPgnJTXxM6syYFHaCA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4085,20 +3879,20 @@ snapshots:
       '@ai-sdk/provider-utils': 5.0.83(zod@4.6.7)
       zod: 4.6.7
 
-  '@alchemy.run/acme@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
+  '@alchemy.run/acme@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
     dependencies:
       '@distilled.cloud/acme': 1.0.0-rc.18(effect@4.1.2)
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect: 4.1.2
 
-  '@alchemy.run/better-auth@2.0.0-beta.85(@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(better-auth@1.7.7)(effect@4.1.2)(kysely@0.28.17)(typescript@7.0.2)':
+  '@alchemy.run/better-auth@2.0.0-beta.85(@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(better-auth@1.7.7)(effect@4.1.2)(kysely@0.28.17)(typescript@7.0.2)':
     dependencies:
-      '@alchemy.run/sql': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+      '@alchemy.run/sql': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       better-auth: 1.7.7
       effect: 4.1.2
     optionalDependencies:
-      '@alchemy.run/cloudflare': 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))
+      '@alchemy.run/cloudflare': 2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
       kysely: 0.28.17
     transitivePeerDependencies:
       - '@effect/sql-libsql'
@@ -4106,30 +3900,6 @@ snapshots:
       - '@effect/sql-pg'
       - mysql2
       - pg
-
-  '@alchemy.run/cloudflare-runtime@2.0.0-beta.85(@distilled.cloud/cloudflare@1.0.0-rc.18(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(rolldown@1.2.13)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))':
-    dependencies:
-      '@alchemy.run/node-utils': 2.0.0-beta.85
-      '@cloudflare/unenv-preset': 2.16.2(unenv@2.0.0-rc.24)(workerd@1.20261026.1)
-      '@distilled.cloud/cloudflare': 1.0.0-rc.18(effect@4.1.2)
-      '@puppeteer/browsers': 3.3.0(yauzl@3.4.0)
-      capnp-es: 0.0.16(typescript@7.0.2)
-      effect: 4.1.2
-      magic-string: 0.30.21
-      mime: 4.1.2
-      sharp: 0.35.5(@types/node@24.10.1)
-      unenv: 2.0.0-rc.25
-      workerd: 1.20261026.1
-      yauzl: 3.4.0
-    optionalDependencies:
-      '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.4.0)
-      rolldown: 1.2.13
-      vite: 7.2.4(@types/node@24.10.1)
-    transitivePeerDependencies:
-      - '@img/sharp-libvips-dev'
-      - '@img/sharp-wasm32'
-      - pnpapi
-      - proxy-agent
 
   '@alchemy.run/cloudflare-runtime@2.0.0-beta.85(@distilled.cloud/cloudflare@1.0.0-rc.18(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(rolldown@1.2.13)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))':
     dependencies:
@@ -4155,26 +3925,26 @@ snapshots:
       - pnpapi
       - proxy-agent
 
-  '@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(@types/react@19.2.7)(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))':
+  '@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))':
     dependencies:
-      '@alchemy.run/acme': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+      '@alchemy.run/acme': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       '@alchemy.run/cloudflare-runtime': 2.0.0-beta.85(@distilled.cloud/cloudflare@1.0.0-rc.18(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(rolldown@1.2.13)(typescript@7.0.2)(vite@7.3.7(@types/node@24.10.1))
-      '@alchemy.run/docker': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      '@alchemy.run/sql': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+      '@alchemy.run/docker': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
+      '@alchemy.run/sql': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       '@distilled.cloud/aws': 1.0.0-rc.18(effect@4.1.2)
       '@distilled.cloud/aws4signer': 1.0.0-rc.18(effect@4.1.2)
       '@distilled.cloud/cloudflare': 1.0.0-rc.18(effect@4.1.2)
       '@distilled.cloud/core': 1.0.0-rc.18(effect@4.1.2)
       '@distilled.cloud/iceberg': 1.0.0-rc.18(effect@4.1.2)
-      '@effect/sql-d1': 4.1.6(effect@4.1.2)
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(@types/react@19.2.7)(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1))
+      '@effect/sql-d1': 4.1.7(effect@4.1.2)
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect: 4.1.2
       pathe: 2.0.3
       picomatch: 4.0.7
       rolldown: 1.2.13
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@alchemy.run/domain': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)))(effect@4.1.2)
+      '@alchemy.run/domain': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
       '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.4.0)
       vite: 7.3.7(@types/node@24.10.1)
     transitivePeerDependencies:
@@ -4189,49 +3959,15 @@ snapshots:
       - pnpapi
       - proxy-agent
 
-  '@alchemy.run/cloudflare@2.0.0-beta.85(@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))':
+  '@alchemy.run/docker@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
     dependencies:
-      '@alchemy.run/acme': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      '@alchemy.run/cloudflare-runtime': 2.0.0-beta.85(@distilled.cloud/cloudflare@1.0.0-rc.18(effect@4.1.2))(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(rolldown@1.2.13)(typescript@7.0.2)(vite@7.2.4(@types/node@24.10.1))
-      '@alchemy.run/docker': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      '@alchemy.run/sql': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      '@distilled.cloud/aws': 1.0.0-rc.18(effect@4.1.2)
-      '@distilled.cloud/aws4signer': 1.0.0-rc.18(effect@4.1.2)
-      '@distilled.cloud/cloudflare': 1.0.0-rc.18(effect@4.1.2)
-      '@distilled.cloud/core': 1.0.0-rc.18(effect@4.1.2)
-      '@distilled.cloud/iceberg': 1.0.0-rc.18(effect@4.1.2)
-      '@effect/sql-d1': 4.1.6(effect@4.1.2)
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
-      effect: 4.1.2
-      pathe: 2.0.3
-      picomatch: 4.0.7
-      rolldown: 1.2.13
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@alchemy.run/domain': 2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)
-      '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.4.0)
-      vite: 7.2.4(@types/node@24.10.1)
-    transitivePeerDependencies:
-      - '@effect/platform-bun'
-      - '@effect/sql-libsql'
-      - '@effect/sql-mysql2'
-      - '@effect/sql-pg'
-      - '@img/sharp-libvips-dev'
-      - '@img/sharp-wasm32'
-      - mysql2
-      - pg
-      - pnpapi
-      - proxy-agent
-
-  '@alchemy.run/docker@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
-    dependencies:
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect: 4.1.2
       rolldown: 1.2.13
 
-  '@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
+  '@alchemy.run/domain@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
     dependencies:
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect: 4.1.2
 
   '@alchemy.run/node-utils@2.0.0-beta.85':
@@ -4241,13 +3977,9 @@ snapshots:
 
   '@alchemy.run/sigil@0.1.0-alpha.1': {}
 
-  '@alchemy.run/sigil@0.1.0-alpha.1(@types/react@19.2.7)':
-    optionalDependencies:
-      '@types/react': 19.2.7
-
-  '@alchemy.run/sql@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
+  '@alchemy.run/sql@2.0.0-beta.85(alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)))(effect@4.1.2)':
     dependencies:
-      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1))
+      alchemy: 2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1))
       effect: 4.1.2
 
   '@babel/code-frame@7.26.2':
@@ -4484,48 +4216,48 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.7
 
-  '@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)':
+  '@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)':
     dependencies:
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.2
       '@opentelemetry/semantic-conventions': 1.45.0
       '@standard-schema/spec': 1.1.0
-      better-call: 1.4.0(zod@4.6.7)
+      better-call: 1.4.0(zod@4.6.1)
       jose: 6.2.18
-      kysely: 0.29.9
+      kysely: 0.28.17
       nanostores: 1.5.5
-      zod: 4.6.7
+      zod: 4.6.1
 
-  '@better-auth/drizzle-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
+  '@better-auth/drizzle-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
 
-  '@better-auth/kysely-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.29.9)':
+  '@better-auth/kysely-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.28.17)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
     optionalDependencies:
-      kysely: 0.29.9
+      kysely: 0.28.17
 
-  '@better-auth/memory-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
+  '@better-auth/memory-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
 
-  '@better-auth/mongo-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
+  '@better-auth/mongo-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
 
-  '@better-auth/prisma-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
+  '@better-auth/prisma-adapter@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
 
-  '@better-auth/telemetry@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)':
+  '@better-auth/telemetry@1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)':
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.2
 
@@ -4572,7 +4304,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20261026.1':
     optional: true
 
-  '@cloudflare/workers-types@5.20261125.1': {}
+  '@cloudflare/workers-types@5.20261127.1': {}
 
   '@distilled.cloud/acme@1.0.0-rc.18(effect@4.1.2)':
     dependencies:
@@ -4645,9 +4377,9 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@effect/sql-d1@4.1.6(effect@4.1.2)':
+  '@effect/sql-d1@4.1.7(effect@4.1.2)':
     dependencies:
-      '@cloudflare/workers-types': 5.20261125.1
+      '@cloudflare/workers-types': 5.20261127.1
       effect: 4.1.2
 
   '@emnapi/runtime@1.11.3':
@@ -4655,157 +4387,79 @@ snapshots:
       tslib: 2.9.1
     optional: true
 
-  '@esbuild/aix-ppc64@0.25.12':
-    optional: true
-
   '@esbuild/aix-ppc64@0.28.2':
-    optional: true
-
-  '@esbuild/android-arm64@0.25.12':
     optional: true
 
   '@esbuild/android-arm64@0.28.2':
     optional: true
 
-  '@esbuild/android-arm@0.25.12':
-    optional: true
-
   '@esbuild/android-arm@0.28.2':
-    optional: true
-
-  '@esbuild/android-x64@0.25.12':
     optional: true
 
   '@esbuild/android-x64@0.28.2':
     optional: true
 
-  '@esbuild/darwin-arm64@0.25.12':
-    optional: true
-
   '@esbuild/darwin-arm64@0.28.2':
-    optional: true
-
-  '@esbuild/darwin-x64@0.25.12':
     optional: true
 
   '@esbuild/darwin-x64@0.28.2':
     optional: true
 
-  '@esbuild/freebsd-arm64@0.25.12':
-    optional: true
-
   '@esbuild/freebsd-arm64@0.28.2':
-    optional: true
-
-  '@esbuild/freebsd-x64@0.25.12':
     optional: true
 
   '@esbuild/freebsd-x64@0.28.2':
     optional: true
 
-  '@esbuild/linux-arm64@0.25.12':
-    optional: true
-
   '@esbuild/linux-arm64@0.28.2':
-    optional: true
-
-  '@esbuild/linux-arm@0.25.12':
     optional: true
 
   '@esbuild/linux-arm@0.28.2':
     optional: true
 
-  '@esbuild/linux-ia32@0.25.12':
-    optional: true
-
   '@esbuild/linux-ia32@0.28.2':
-    optional: true
-
-  '@esbuild/linux-loong64@0.25.12':
     optional: true
 
   '@esbuild/linux-loong64@0.28.2':
     optional: true
 
-  '@esbuild/linux-mips64el@0.25.12':
-    optional: true
-
   '@esbuild/linux-mips64el@0.28.2':
-    optional: true
-
-  '@esbuild/linux-ppc64@0.25.12':
     optional: true
 
   '@esbuild/linux-ppc64@0.28.2':
     optional: true
 
-  '@esbuild/linux-riscv64@0.25.12':
-    optional: true
-
   '@esbuild/linux-riscv64@0.28.2':
-    optional: true
-
-  '@esbuild/linux-s390x@0.25.12':
     optional: true
 
   '@esbuild/linux-s390x@0.28.2':
     optional: true
 
-  '@esbuild/linux-x64@0.25.12':
-    optional: true
-
   '@esbuild/linux-x64@0.28.2':
-    optional: true
-
-  '@esbuild/netbsd-arm64@0.25.12':
     optional: true
 
   '@esbuild/netbsd-arm64@0.28.2':
     optional: true
 
-  '@esbuild/netbsd-x64@0.25.12':
-    optional: true
-
   '@esbuild/netbsd-x64@0.28.2':
-    optional: true
-
-  '@esbuild/openbsd-arm64@0.25.12':
     optional: true
 
   '@esbuild/openbsd-arm64@0.28.2':
     optional: true
 
-  '@esbuild/openbsd-x64@0.25.12':
-    optional: true
-
   '@esbuild/openbsd-x64@0.28.2':
-    optional: true
-
-  '@esbuild/openharmony-arm64@0.25.12':
     optional: true
 
   '@esbuild/openharmony-arm64@0.28.2':
     optional: true
 
-  '@esbuild/sunos-x64@0.25.12':
-    optional: true
-
   '@esbuild/sunos-x64@0.28.2':
-    optional: true
-
-  '@esbuild/win32-arm64@0.25.12':
     optional: true
 
   '@esbuild/win32-arm64@0.28.2':
     optional: true
 
-  '@esbuild/win32-ia32@0.25.12':
-    optional: true
-
   '@esbuild/win32-ia32@0.28.2':
-    optional: true
-
-  '@esbuild/win32-x64@0.25.12':
     optional: true
 
   '@esbuild/win32-x64@0.28.2':
@@ -5229,7 +4883,7 @@ snapshots:
 
   '@puppeteer/browsers@3.3.0(yauzl@3.4.0)':
     dependencies:
-      modern-tar: 0.8.6
+      modern-tar: 0.8.7
       yargs: 18.2.0
     optionalDependencies:
       yauzl: 3.4.0
@@ -5878,25 +5532,7 @@ snapshots:
       '@ai-sdk/provider-utils': 5.0.76(zod@4.6.7)
       zod: 4.6.7
 
-  alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(@types/react@19.2.7)(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)):
-    dependencies:
-      '@alchemy.run/node-utils': 2.0.0-beta.85
-      '@alchemy.run/sigil': 0.1.0-alpha.1(@types/react@19.2.7)
-      capnweb: 0.12.0
-      effect: 4.1.2
-      fflate: 0.8.3
-      pathe: 2.0.3
-      picomatch: 4.0.7
-      rolldown: 1.2.13
-      tinyglobby: 0.2.17
-      yaml: 2.9.1
-    optionalDependencies:
-      '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.4.0)
-      vite: 7.3.7(@types/node@24.10.1)(yaml@2.9.1)
-    transitivePeerDependencies:
-      - react-devtools-core
-
-  alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1)):
+  alchemy@2.0.0-beta.85(@effect/platform-node@4.1.2(effect@4.1.2)(redis@6.4.0))(effect@4.1.2)(vite@7.3.7(@types/node@24.10.1)(yaml@2.9.1)):
     dependencies:
       '@alchemy.run/node-utils': 2.0.0-beta.85
       '@alchemy.run/sigil': 0.1.0-alpha.1
@@ -5910,7 +5546,7 @@ snapshots:
       yaml: 2.9.1
     optionalDependencies:
       '@effect/platform-node': 4.1.2(effect@4.1.2)(redis@6.4.0)
-      vite: 7.2.4(@types/node@24.10.1)(yaml@2.9.1)
+      vite: 7.3.7(@types/node@24.10.1)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@types/react'
       - react-devtools-core
@@ -5949,23 +5585,23 @@ snapshots:
 
   better-auth@1.7.7:
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
-      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.29.9)
-      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
+      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.28.17)
+      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.2
       '@noble/ciphers': 2.4.0
       '@noble/hashes': 2.4.0
-      better-call: 1.4.0(zod@4.6.7)
+      better-call: 1.4.0(zod@4.6.1)
       defu: 6.1.7
       jose: 6.2.18
-      kysely: 0.29.9
+      kysely: 0.28.17
       nanostores: 1.5.5
-      zod: 4.6.7
+      zod: 4.6.1
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@prisma/client'
@@ -5975,23 +5611,23 @@ snapshots:
 
   better-auth@1.7.7(@tanstack/react-start@1.139.3(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(vite@7.3.7(@types/node@24.10.1)))(@tanstack/virtual-file-routes@1.139.0)(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(tsx@4.23.15):
     dependencies:
-      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5)
-      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.29.9)
-      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
-      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.7))(jose@6.2.18)(kysely@0.29.9)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
+      '@better-auth/core': 1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5)
+      '@better-auth/drizzle-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/kysely-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(kysely@0.28.17)
+      '@better-auth/memory-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/mongo-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/prisma-adapter': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)
+      '@better-auth/telemetry': 1.7.7(@better-auth/core@1.7.7(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(better-call@1.4.0(zod@4.6.1))(jose@6.2.18)(kysely@0.28.17)(nanostores@1.5.5))(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.2
       '@noble/ciphers': 2.4.0
       '@noble/hashes': 2.4.0
-      better-call: 1.4.0(zod@4.6.7)
+      better-call: 1.4.0(zod@4.6.1)
       defu: 6.1.7
       jose: 6.2.18
-      kysely: 0.29.9
+      kysely: 0.28.17
       nanostores: 1.5.5
-      zod: 4.6.7
+      zod: 4.6.1
     optionalDependencies:
       '@tanstack/react-start': 1.139.3(@tanstack/virtual-file-routes@1.139.0)(react@19.2.0)(react-dom@19.2.0(react@19.2.0))(tsx@4.23.15)(vite@7.3.7(@types/node@24.10.1))
       react: 19.2.0
@@ -6003,14 +5639,14 @@ snapshots:
       - mongodb
       - prisma
 
-  better-call@1.4.0(zod@4.6.7):
+  better-call@1.4.0(zod@4.6.1):
     dependencies:
       '@better-auth/utils': 0.5.1
       '@better-fetch/fetch': 1.3.2
       rou3: 0.9.2
       set-cookie-parser: 3.2.3
     optionalDependencies:
-      zod: 4.6.7
+      zod: 4.6.1
 
   binary-extensions@2.3.0: {}
 
@@ -6201,36 +5837,6 @@ snapshots:
 
   entities@7.0.1: {}
 
-  esbuild@0.25.12:
-    optionalDependencies:
-      '@esbuild/aix-ppc64': 0.25.12
-      '@esbuild/android-arm': 0.25.12
-      '@esbuild/android-arm64': 0.25.12
-      '@esbuild/android-x64': 0.25.12
-      '@esbuild/darwin-arm64': 0.25.12
-      '@esbuild/darwin-x64': 0.25.12
-      '@esbuild/freebsd-arm64': 0.25.12
-      '@esbuild/freebsd-x64': 0.25.12
-      '@esbuild/linux-arm': 0.25.12
-      '@esbuild/linux-arm64': 0.25.12
-      '@esbuild/linux-ia32': 0.25.12
-      '@esbuild/linux-loong64': 0.25.12
-      '@esbuild/linux-mips64el': 0.25.12
-      '@esbuild/linux-ppc64': 0.25.12
-      '@esbuild/linux-riscv64': 0.25.12
-      '@esbuild/linux-s390x': 0.25.12
-      '@esbuild/linux-x64': 0.25.12
-      '@esbuild/netbsd-arm64': 0.25.12
-      '@esbuild/netbsd-x64': 0.25.12
-      '@esbuild/openbsd-arm64': 0.25.12
-      '@esbuild/openbsd-x64': 0.25.12
-      '@esbuild/openharmony-arm64': 0.25.12
-      '@esbuild/sunos-x64': 0.25.12
-      '@esbuild/win32-arm64': 0.25.12
-      '@esbuild/win32-ia32': 0.25.12
-      '@esbuild/win32-x64': 0.25.12
-    optional: true
-
   esbuild@0.28.2:
     optionalDependencies:
       '@esbuild/aix-ppc64': 0.28.2
@@ -6409,8 +6015,6 @@ snapshots:
 
   kysely@0.28.17: {}
 
-  kysely@0.29.9: {}
-
   lefthook-android-arm64@2.2.4:
     optional: true
 
@@ -6498,7 +6102,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  mdast-util-gfm-autolink-literal@2.1.2(mdast-util-from-markdown@2.1.0)(mdast-util-to-markdown@2.2.4):
+  mdast-util-gfm-autolink-literal@2.1.2(mdast-util-from-markdown@2.1.0)(mdast-util-to-markdown@2.2.5):
     dependencies:
       '@types/mdast': 4.0.4
       ccount: 2.0.1
@@ -6507,14 +6111,14 @@ snapshots:
       micromark-util-character: 2.1.1
     optionalDependencies:
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
 
   mdast-util-gfm-footnote@2.1.0:
     dependencies:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
       micromark-util-normalize-identifier: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -6523,7 +6127,7 @@ snapshots:
     dependencies:
       '@types/mdast': 4.0.4
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6533,7 +6137,7 @@ snapshots:
       devlop: 1.1.0
       markdown-table: 3.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
       mdast-util-to-string: 4.0.0
       unist-util-visit: 5.2.0
     transitivePeerDependencies:
@@ -6544,19 +6148,19 @@ snapshots:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
     transitivePeerDependencies:
       - supports-color
 
   mdast-util-gfm@3.1.0:
     dependencies:
       mdast-util-from-markdown: 2.1.0
-      mdast-util-gfm-autolink-literal: 2.1.2(mdast-util-from-markdown@2.1.0)(mdast-util-to-markdown@2.2.4)
+      mdast-util-gfm-autolink-literal: 2.1.2(mdast-util-from-markdown@2.1.0)(mdast-util-to-markdown@2.2.5)
       mdast-util-gfm-footnote: 2.1.0
       mdast-util-gfm-strikethrough: 2.0.1
       mdast-util-gfm-table: 2.0.1
       mdast-util-gfm-task-list-item: 2.0.1
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6567,7 +6171,7 @@ snapshots:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6580,7 +6184,7 @@ snapshots:
       ccount: 2.0.1
       devlop: 1.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
       parse-entities: 4.0.2
       stringify-entities: 4.0.5
       unist-util-stringify-position: 4.0.0
@@ -6595,7 +6199,7 @@ snapshots:
       '@types/mdast': 4.0.4
       devlop: 1.1.0
       mdast-util-from-markdown: 2.1.0
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
     transitivePeerDependencies:
       - supports-color
 
@@ -6621,7 +6225,7 @@ snapshots:
       unist-util-visit: 5.2.0
       vfile: 6.0.3
 
-  mdast-util-to-markdown@2.2.4:
+  mdast-util-to-markdown@2.2.5:
     dependencies:
       '@types/mdast': 4.0.4
       '@types/unist': 3.0.3
@@ -6838,7 +6442,7 @@ snapshots:
 
   mime@4.1.2: {}
 
-  modern-tar@0.8.6: {}
+  modern-tar@0.8.7: {}
 
   ms@2.1.3: {}
 
@@ -6994,7 +6598,7 @@ snapshots:
 
   pngjs@7.0.0: {}
 
-  postcss@8.5.33:
+  postcss@8.5.34:
     dependencies:
       nanoid: 3.3.20
       picocolors: 1.1.1
@@ -7107,7 +6711,7 @@ snapshots:
   remark-stringify@11.0.0:
     dependencies:
       '@types/mdast': 4.0.4
-      mdast-util-to-markdown: 2.2.4
+      mdast-util-to-markdown: 2.2.5
       unified: 11.0.5
 
   reselect@5.3.0: {}
@@ -7418,43 +7022,12 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.4
 
-  vite@7.2.4(@types/node@24.10.1):
-    dependencies:
-      esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
-      postcss: 8.5.33
-      rollup: 4.68.8
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.10.1
-      fsevents: 2.3.3
-    transitivePeerDependencies:
-      - pnpapi
-    optional: true
-
-  vite@7.2.4(@types/node@24.10.1)(yaml@2.9.1):
-    dependencies:
-      esbuild: 0.25.12
-      fdir: 6.5.0(picomatch@4.0.7)
-      picomatch: 4.0.7
-      postcss: 8.5.33
-      rollup: 4.68.8
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 24.10.1
-      fsevents: 2.3.3
-      yaml: 2.9.1
-    transitivePeerDependencies:
-      - pnpapi
-    optional: true
-
   vite@7.3.7(@types/node@24.10.1):
     dependencies:
       esbuild: 0.28.2
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
-      postcss: 8.5.33
+      postcss: 8.5.34
       rollup: 4.68.8
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -7468,7 +7041,7 @@ snapshots:
       esbuild: 0.28.2
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
-      postcss: 8.5.33
+      postcss: 8.5.34
       rollup: 4.68.8
       tinyglobby: 0.2.17
     optionalDependencies:
@@ -7484,7 +7057,7 @@ snapshots:
       esbuild: 0.28.2
       fdir: 6.5.0(picomatch@4.0.7)
       picomatch: 4.0.7
-      postcss: 8.5.33
+      postcss: 8.5.34
       rollup: 4.68.8
       tinyglobby: 0.2.17
     optionalDependencies:
