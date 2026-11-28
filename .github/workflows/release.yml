@@ -145,7 +145,8 @@ jobs:
           nub prune --prod
 
       # The ready archive is the pruned tree. These excludes drop files the
-      # deploy does not load. Node still resolves every package the stack imports.
+      # deploy does not load. Node resolves the stack from compiled JavaScript.
+      # The Worker bundler also loads the TypeScript sources named below.
       - name: Publish to alchemy.new
         uses: SolZeroAI/alchemy-new-publish-action@v1
         with:
@@ -160,12 +161,17 @@ jobs:
             node_modules/**/*.tsx
             node_modules/**/*.mts
             node_modules/**/*.cts
-            # Node loads these Alchemy subpaths as TypeScript, and the TanStack
-            # Start Vite plugin loads these entries while it builds the site.
+            # Node loads these Alchemy subpaths as TypeScript.
             !node_modules/**/alchemy/src/Runtime/Bootstrap.ts
             !node_modules/**/alchemy/src/Runtime/ManagedHttpShutdown.ts
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**/*.ts
+            # The Worker bundler resolves these packages with the worker
+            # condition, which is their TypeScript source. The generated
+            # entry imports @alchemy.run/cloudflare/Bridge from that source.
+            !node_modules/**/@alchemy.run/cloudflare/src/**
+            !node_modules/**/@alchemy.run/cloudflare/src/**/*.ts
+            !node_modules/**/@alchemy.run/better-auth/src/**
+            !node_modules/**/@alchemy.run/better-auth/src/**/*.ts
+            # The TanStack Start Vite plugin loads these entries while it builds the site.
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.ts
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.tsx
