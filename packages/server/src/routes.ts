@@ -14,6 +14,7 @@ import {
   RevokeAgent,
   TEAM,
   Wake,
+  WakeFailed,
   type Actor,
 } from "@agent-board/domain";
 import { AgentId } from "@agent-board/domain";
@@ -54,7 +55,7 @@ const RevokeBody = Schema.Struct({
 
 const WaitBody = Schema.Struct({
   target: Schema.String,
-  timeoutMs: Schema.optional(Schema.Number),
+  timeoutMs: Schema.optional(Schema.Finite),
   after: Schema.optional(Schema.String),
   channel: Schema.optional(Schema.String),
   labelKey: Schema.optional(Schema.String),
@@ -79,17 +80,15 @@ const humanOf = (actor: Actor) => (actor._tag === "Human" ? actor : undefined);
 
 export const WakeLive = Layer.succeed(Wake, {
   notify: (args: { readonly url: string; readonly body: string }) =>
-    Effect.gen(function* () {
-      const response = yield* Effect.promise(() =>
+    Effect.tryPromise({
+      try: () =>
         fetch(args.url, {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: args.body,
         }),
-      );
-
-      return { status: response.status };
-    }),
+      catch: () => new WakeFailed({ url: args.url }),
+    }).pipe(Effect.map((response) => ({ status: response.status }))),
 });
 
 interface AuthContext {

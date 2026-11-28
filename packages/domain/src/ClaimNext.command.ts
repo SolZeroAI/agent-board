@@ -9,8 +9,8 @@ import { Session } from "./Session.ts";
 export class WorkClaimed extends Domain.Event("WorkClaimed", {
   itemId: WorkItemId,
   agentId: AgentId,
-  leaseMs: Schema.Number,
-  claimGeneration: Schema.Number,
+  leaseMs: Schema.Finite,
+  claimGeneration: Schema.Finite,
 }) {}
 
 /**
@@ -20,7 +20,7 @@ export class WorkClaimed extends Domain.Event("WorkClaimed", {
 export class ClaimNext extends Domain.Command("ClaimNext", {
   target: BoardId,
   middleware: [Session],
-  input: { leaseMs: Schema.Number },
+  input: { leaseMs: Schema.Finite },
   events: [WorkClaimed],
   rejects: [BoardClosed, NotMember, InvalidLease],
   reply: { item: Schema.NullOr(PublicWorkItem) },

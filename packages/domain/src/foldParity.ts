@@ -37,7 +37,7 @@ import { taskLabel, withFeed } from "./scope.ts";
 const keep = (state: State, fn: (open: Open) => Open): State =>
   state._tag === "Open" ? fn(state) : state;
 
-const messageOf = (event: typeof MessagePosted.Type): Message => ({
+const messageOf = (event: MessagePosted): Message => ({
   messageId: event.messageId,
   channel: event.channel,
   threadId: event.threadId,
@@ -75,7 +75,7 @@ const retask = (open: Open, taskId: string, patch: Partial<Task>) => {
   return { ...open, tasks: { ...open.tasks, [taskId]: { ...task, ...patch } } };
 };
 
-export const foldChannelCreated = (state: State, event: typeof ChannelCreated.Type) =>
+export const foldChannelCreated = (state: State, event: ChannelCreated) =>
   keep(state, (open) =>
     withFeed(
       {
@@ -97,7 +97,7 @@ export const foldChannelCreated = (state: State, event: typeof ChannelCreated.Ty
     ),
   );
 
-export const foldMessagePosted = (state: State, event: typeof MessagePosted.Type) =>
+export const foldMessagePosted = (state: State, event: MessagePosted) =>
   keep(state, (open) =>
     withFeed(
       {
@@ -124,7 +124,7 @@ export const foldMessagePosted = (state: State, event: typeof MessagePosted.Type
     ),
   );
 
-export const foldMessageEdited = (state: State, event: typeof MessageEdited.Type) =>
+export const foldMessageEdited = (state: State, event: MessageEdited) =>
   keep(state, (open) => {
     const message = open.threads[event.messageId];
 
@@ -149,7 +149,7 @@ export const foldMessageEdited = (state: State, event: typeof MessageEdited.Type
     );
   });
 
-export const foldMessageDeleted = (state: State, event: typeof MessageDeleted.Type) =>
+export const foldMessageDeleted = (state: State, event: MessageDeleted) =>
   keep(state, (open) => {
     const message = open.threads[event.messageId];
 
@@ -172,7 +172,7 @@ export const foldMessageDeleted = (state: State, event: typeof MessageDeleted.Ty
     );
   });
 
-export const foldLabels = (state: State, event: typeof LabelsChanged.Type) =>
+export const foldLabels = (state: State, event: LabelsChanged) =>
   keep(state, (open) => {
     const message = open.threads[event.messageId];
 
@@ -238,13 +238,12 @@ const react = (
     );
   });
 
-export const foldReactionAdded = (state: State, event: typeof ReactionAdded.Type) =>
-  react(state, event, true);
+export const foldReactionAdded = (state: State, event: ReactionAdded) => react(state, event, true);
 
-export const foldReactionRemoved = (state: State, event: typeof ReactionRemoved.Type) =>
+export const foldReactionRemoved = (state: State, event: ReactionRemoved) =>
   react(state, event, false);
 
-export const foldAttachment = (state: State, event: typeof AttachmentAdded.Type) =>
+export const foldAttachment = (state: State, event: AttachmentAdded) =>
   keep(state, (open) => {
     const message = open.threads[event.messageId];
 
@@ -274,7 +273,7 @@ export const foldAttachment = (state: State, event: typeof AttachmentAdded.Type)
     );
   });
 
-export const foldSchema = (state: State, event: typeof SchemaRegistered.Type) =>
+export const foldSchema = (state: State, event: SchemaRegistered) =>
   keep(state, (open) => ({
     ...open,
     schemas: {
@@ -287,7 +286,7 @@ export const foldSchema = (state: State, event: typeof SchemaRegistered.Type) =>
     },
   }));
 
-export const foldGrantCreated = (state: State, event: typeof GrantCreated.Type) =>
+export const foldGrantCreated = (state: State, event: GrantCreated) =>
   keep(state, (open) => ({
     ...open,
     nextGrant: open.nextGrant + 1,
@@ -302,13 +301,13 @@ export const foldGrantCreated = (state: State, event: typeof GrantCreated.Type) 
     ],
   }));
 
-export const foldGrantRevoked = (state: State, event: typeof GrantRevoked.Type) =>
+export const foldGrantRevoked = (state: State, event: GrantRevoked) =>
   keep(state, (open) => ({
     ...open,
     grants: open.grants.filter((grant) => grant.grantId !== event.grantId),
   }));
 
-export const foldTaskCreated = (state: State, event: typeof TaskCreated.Type) =>
+export const foldTaskCreated = (state: State, event: TaskCreated) =>
   keep(state, (open) => {
     const task: Task = {
       taskId: event.taskId,
@@ -374,7 +373,7 @@ const taskFeed = (
   });
 };
 
-export const foldTaskReady = (state: State, event: typeof TaskReady.Type) =>
+export const foldTaskReady = (state: State, event: TaskReady) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: "ready" }),
@@ -385,7 +384,7 @@ export const foldTaskReady = (state: State, event: typeof TaskReady.Type) =>
     ),
   );
 
-export const foldTaskClaimed = (state: State, event: typeof TaskClaimed.Type) =>
+export const foldTaskClaimed = (state: State, event: TaskClaimed) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, {
@@ -404,7 +403,7 @@ export const foldTaskClaimed = (state: State, event: typeof TaskClaimed.Type) =>
     ),
   );
 
-export const foldTaskRenewed = (state: State, event: typeof TaskRenewed.Type) =>
+export const foldTaskRenewed = (state: State, event: TaskRenewed) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, {
@@ -418,7 +417,7 @@ export const foldTaskRenewed = (state: State, event: typeof TaskRenewed.Type) =>
     ),
   );
 
-export const foldTaskReleased = (state: State, event: typeof TaskReleased.Type) =>
+export const foldTaskReleased = (state: State, event: TaskReleased) =>
   keep(state, (open) => {
     const task = open.tasks[event.taskId];
 
@@ -434,7 +433,7 @@ export const foldTaskReleased = (state: State, event: typeof TaskReleased.Type) 
     );
   });
 
-export const foldTaskCompleted = (state: State, event: typeof TaskCompleted.Type) =>
+export const foldTaskCompleted = (state: State, event: TaskCompleted) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: "completed", result: event.result }),
@@ -445,7 +444,7 @@ export const foldTaskCompleted = (state: State, event: typeof TaskCompleted.Type
     ),
   );
 
-export const foldTaskFailed = (state: State, event: typeof TaskFailed.Type) =>
+export const foldTaskFailed = (state: State, event: TaskFailed) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: "failed", reason: event.reason }),
@@ -456,7 +455,7 @@ export const foldTaskFailed = (state: State, event: typeof TaskFailed.Type) =>
     ),
   );
 
-export const foldTaskBlocked = (state: State, event: typeof TaskBlocked.Type) =>
+export const foldTaskBlocked = (state: State, event: TaskBlocked) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, {
@@ -471,7 +470,7 @@ export const foldTaskBlocked = (state: State, event: typeof TaskBlocked.Type) =>
     ),
   );
 
-export const foldTaskUnblocked = (state: State, event: typeof TaskUnblocked.Type) =>
+export const foldTaskUnblocked = (state: State, event: TaskUnblocked) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: event.state }),
@@ -482,7 +481,7 @@ export const foldTaskUnblocked = (state: State, event: typeof TaskUnblocked.Type
     ),
   );
 
-export const foldTaskCanceled = (state: State, event: typeof TaskCanceled.Type) =>
+export const foldTaskCanceled = (state: State, event: TaskCanceled) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: "canceled", reason: event.reason }),
@@ -493,7 +492,7 @@ export const foldTaskCanceled = (state: State, event: typeof TaskCanceled.Type) 
     ),
   );
 
-export const foldTaskReopened = (state: State, event: typeof TaskReopened.Type) =>
+export const foldTaskReopened = (state: State, event: TaskReopened) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { state: event.state }),
@@ -504,7 +503,7 @@ export const foldTaskReopened = (state: State, event: typeof TaskReopened.Type) 
     ),
   );
 
-export const foldTaskAssigned = (state: State, event: typeof TaskAssigned.Type) =>
+export const foldTaskAssigned = (state: State, event: TaskAssigned) =>
   keep(state, (open) => {
     const task = open.tasks[event.taskId];
 
@@ -523,7 +522,7 @@ export const foldTaskAssigned = (state: State, event: typeof TaskAssigned.Type) 
     );
   });
 
-export const foldTaskNeeds = (state: State, event: typeof TaskNeedsChanged.Type) =>
+export const foldTaskNeeds = (state: State, event: TaskNeedsChanged) =>
   keep(state, (open) =>
     taskFeed(
       retask(open, event.taskId, { needs: [...event.needs], state: event.state }),
@@ -534,7 +533,7 @@ export const foldTaskNeeds = (state: State, event: typeof TaskNeedsChanged.Type)
     ),
   );
 
-export const foldTaskExpired = (state: State, event: typeof TaskExpired.Type) =>
+export const foldTaskExpired = (state: State, event: TaskExpired) =>
   keep(state, (open) => {
     const task = open.tasks[event.taskId];
 
@@ -550,7 +549,7 @@ export const foldTaskExpired = (state: State, event: typeof TaskExpired.Type) =>
     );
   });
 
-export const foldWatcherRegistered = (state: State, event: typeof WatcherRegistered.Type) =>
+export const foldWatcherRegistered = (state: State, event: WatcherRegistered) =>
   keep(state, (open) => ({
     ...open,
     watchers: [
@@ -567,13 +566,13 @@ export const foldWatcherRegistered = (state: State, event: typeof WatcherRegiste
     ],
   }));
 
-export const foldWatcherRemoved = (state: State, event: typeof WatcherRemoved.Type) =>
+export const foldWatcherRemoved = (state: State, event: WatcherRemoved) =>
   keep(state, (open) => ({
     ...open,
     watchers: open.watchers.filter((watcher) => watcher.watcherId !== event.watcherId),
   }));
 
-export const foldFollowScheduled = (state: State, event: typeof FollowUpScheduled.Type) =>
+export const foldFollowScheduled = (state: State, event: FollowUpScheduled) =>
   keep(state, (open) => ({
     ...open,
     schedules: {
@@ -592,7 +591,7 @@ export const foldFollowScheduled = (state: State, event: typeof FollowUpSchedule
     },
   }));
 
-export const foldFollowCanceled = (state: State, event: typeof FollowUpCanceled.Type) =>
+export const foldFollowCanceled = (state: State, event: FollowUpCanceled) =>
   keep(state, (open) => {
     const schedule = open.schedules[event.scheduleId];
 
@@ -604,7 +603,7 @@ export const foldFollowCanceled = (state: State, event: typeof FollowUpCanceled.
     };
   });
 
-export const foldFollowDelivered = (state: State, event: typeof FollowUpDelivered.Type) =>
+export const foldFollowDelivered = (state: State, event: FollowUpDelivered) =>
   keep(state, (open) => {
     const schedule = open.schedules[event.scheduleId];
 
@@ -619,7 +618,7 @@ export const foldFollowDelivered = (state: State, event: typeof FollowUpDelivere
     };
   });
 
-export const foldPlan = (state: State, event: typeof PlanNoted.Type) =>
+export const foldPlan = (state: State, event: PlanNoted) =>
   keep(state, (open) => ({
     ...open,
     plans: {

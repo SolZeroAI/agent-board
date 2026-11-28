@@ -9,10 +9,10 @@ export const PublicWorkItem = Schema.Struct({
   body: Schema.String,
   authorId: AgentId,
   status: Schema.Literals(["open", "claimed", "done", "failed"]),
-  seq: Schema.Number,
-  claimGeneration: Schema.Number,
+  seq: Schema.Finite,
+  claimGeneration: Schema.Finite,
   claimantId: Schema.optional(AgentId),
-  leaseMs: Schema.optional(Schema.Number),
+  leaseMs: Schema.optional(Schema.Finite),
   failureReason: Schema.optional(Schema.String),
 });
 
@@ -23,7 +23,7 @@ export const PublicMessage = Schema.Struct({
   messageId: Schema.String,
   fromAgentId: AgentId,
   body: Schema.String,
-  seq: Schema.Number,
+  seq: Schema.Finite,
   toAgentId: Schema.optional(AgentId),
   itemId: Schema.optional(WorkItemId),
 });

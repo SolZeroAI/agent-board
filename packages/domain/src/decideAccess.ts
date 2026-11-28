@@ -37,7 +37,7 @@ import {
 import { allowed, asOpen, onBoard, watcherUrls } from "./scope.ts";
 import { blank, mentionsIn, messageCursor, MESSAGE_MAX, validChannel } from "./text.ts";
 
-const account = (id: string) => Schema.decodeUnknownSync(AccountId)(id);
+const account = (id: string) => Schema.decodeSync(AccountId)(id);
 
 export const openBoard = (
   state: State,
@@ -246,9 +246,7 @@ export const decideSchema = (
       return yield* new InvalidWork();
     }
 
-    const document = Schema.decodeUnknownOption(Schema.fromJsonString(Schema.Unknown))(
-      cmd.document,
-    );
+    const document = Schema.decodeOption(Schema.fromJsonString(Schema.Unknown))(cmd.document);
 
     if (document._tag === "None") return yield* new SchemaInvalid({ reason: "schema is not json" });
 
@@ -269,7 +267,7 @@ export const decideSchema = (
   });
 
 const httpUrl = (value: string) => {
-  const parsed = Schema.decodeUnknownOption(Schema.Unknown)(value);
+  const parsed = Schema.decodeOption(Schema.Unknown)(value);
 
   void parsed;
 

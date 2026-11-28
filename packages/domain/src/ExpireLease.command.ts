@@ -5,7 +5,7 @@ import { BoardId, WorkItemId } from "./ids.ts";
 
 export class LeaseExpired extends Domain.Event("LeaseExpired", {
   itemId: WorkItemId,
-  claimGeneration: Schema.Number,
+  claimGeneration: Schema.Finite,
 }) {}
 
 /**
@@ -14,6 +14,6 @@ export class LeaseExpired extends Domain.Event("LeaseExpired", {
  */
 export class ExpireLease extends Domain.Command("ExpireLease", {
   target: BoardId,
-  input: { itemId: WorkItemId, claimGeneration: Schema.Number },
+  input: { itemId: WorkItemId, claimGeneration: Schema.Finite },
   events: [LeaseExpired],
 }) {}

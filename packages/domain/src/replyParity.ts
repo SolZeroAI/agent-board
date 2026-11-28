@@ -8,18 +8,16 @@ import { seqOf, subtree } from "./text.ts";
 const marked = (events: ReadonlyArray<{ readonly _tag: string }>) => {
   const found = events.find((event) => event._tag === "ReadMarked");
 
-  return found !== undefined && found._tag === "ReadMarked"
-    ? (found as typeof ReadMarked.Type)
-    : undefined;
+  return found !== undefined && found._tag === "ReadMarked" ? (found as ReadMarked) : undefined;
 };
 
-const reader = (event: typeof ReadMarked.Type | undefined) =>
+const reader = (event: ReadMarked | undefined) =>
   event === undefined ? undefined : actorFrom(event.actorJson);
 
 const visibleChannel = (open: Open, actor: Actor, channel: string) =>
   can(open.grants, actor, channel, "read");
 
-const feedOk = (entry: FeedEntry, open: Open, actor: Actor, event: typeof ReadMarked.Type) => {
+const feedOk = (entry: FeedEntry, open: Open, actor: Actor, event: ReadMarked) => {
   if (!event.includeBookkeeping && entry.bookkeeping) return false;
 
   if (entry.channel !== undefined && !visibleChannel(open, actor, entry.channel)) return false;

@@ -15,15 +15,15 @@ import { Session } from "./Session.ts";
 export class LeaseExtended extends Domain.Event("LeaseExtended", {
   itemId: WorkItemId,
   agentId: AgentId,
-  leaseMs: Schema.Number,
-  claimGeneration: Schema.Number,
+  leaseMs: Schema.Finite,
+  claimGeneration: Schema.Finite,
 }) {}
 
 /** Extend the caller's lease on a claimed item. */
 export class Heartbeat extends Domain.Command("Heartbeat", {
   target: BoardId,
   middleware: [Session],
-  input: { itemId: WorkItemId, leaseMs: Schema.Number },
+  input: { itemId: WorkItemId, leaseMs: Schema.Finite },
   events: [LeaseExtended],
   rejects: [BoardClosed, NotMember, UnknownItem, NotClaimed, NotClaimant, InvalidLease],
 }) {}

@@ -9,7 +9,7 @@ export class MessageSent extends Domain.Event("MessageSent", {
   messageId: MessageId,
   fromAgentId: AgentId,
   body: Schema.String,
-  seq: Schema.Number,
+  seq: Schema.Finite,
   toAgentId: Schema.optional(AgentId),
   itemId: Schema.optional(WorkItemId),
 }) {}
@@ -26,5 +26,5 @@ export class SendMessage extends Domain.Command("SendMessage", {
   },
   events: [MessageSent],
   rejects: [BoardClosed, NotMember, UnknownAgent, UnknownItem, InvalidMessage],
-  reply: { messageId: MessageId, seq: Schema.Number },
+  reply: { messageId: MessageId, seq: Schema.Finite },
 }) {}
