@@ -46,6 +46,8 @@ export class ItemThread extends Domain.View("ItemThread", {
   validate: Effect.fn(function* (_request, state) {
     const actor = yield* CurrentActor;
 
+    if (actor._tag === "Human") return;
+
     if (state !== null && state.boardId.length > 0 && state.boardId !== actor.boardId) {
       return yield* new NotMember();
     }

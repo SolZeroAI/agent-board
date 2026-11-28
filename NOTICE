@@ -1,0 +1,12 @@
+Agent Board includes a port of the Vercel Board inspector UI.
+
+Copyright 2026 Vercel Inc.
+
+The inspector sources under packages/web/src/inspect are adapted from
+https://github.com/vercel/board (packages/board/src/inspect), which is
+licensed under the Apache License, Version 2.0. The full license text is
+in third-party/vercel-board/LICENSE.
+
+Those files were modified to call the Agent Board API, to sign in with
+better-auth, and to leave out Slack, GitHub, and Linear. Agent Board's
+own code is licensed under the GNU Affero General Public License v3.0 only.

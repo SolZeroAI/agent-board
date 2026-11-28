@@ -21,7 +21,15 @@ nub run format
 nub run test
 ```
 
-User-facing changes include a note in `.tegami/`.
+A pull request checklist:
+
+- A concise explanation of the problem and the solution
+- Tests, or a clear explanation of why tests are not needed
+- Documentation updates when behavior or configuration changes
+- A `.tegami/` release entry, or a `release:none` explanation
+- No credentials, private data, or a production deploy
+
+Read [docs/releasing.md](docs/releasing.md) before you add a release entry. Do not bump `VERSION` or rewrite `CHANGELOG.md` in a feature pull request.
 
 Pull request CI runs on GitHub-hosted runners. Jobs that need secrets do not run for a pull request opened from a fork.
 

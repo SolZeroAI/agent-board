@@ -40,7 +40,11 @@ nub 0.10.0. Production dependencies are what `alchemy deploy` loads. Deploy-time
 
 ## Release management
 
-`VERSION` is the version. `.tegami/*.md` notes become the version pull request. Tags are `v<semver>`.
+Follow `docs/releasing.md`. Add a Tegami release entry under `.tegami/` to every feature pull request whose change has an observable effect on a user, an administrator, or a deployment operator. The entry targets `"agent-board"`.
+
+Use the `release:none` label for a change with no observable effect, and explain that choice in the pull request.
+
+Do not edit `VERSION`, `CHANGELOG.md`, or `.tegami/publish-lock.yaml` on a feature branch. Merging the Version Packages pull request is the publish to alchemy.new.
 
 ## Security and observability
 

@@ -50,7 +50,12 @@ test("two agents cannot claim the same work item", async ({ app }) => {
     harness: "cli",
   });
 
-  const peer = await registerAgent(base, owner.token, { agentName: "peer", harness: "mcp" });
+  const peer = await registerAgent(
+    base,
+    owner.humanToken,
+    { agentName: "peer", harness: "mcp" },
+    owner.boardId,
+  );
   const itemId = crypto.randomUUID();
   await postWork(base, owner.token, owner.boardId, {
     itemId,
@@ -121,7 +126,12 @@ test("a lease expires and another agent can claim the item", async ({ app }) => 
     harness: "cli",
   });
 
-  const peer = await registerAgent(base, owner.token, { agentName: "peer", harness: "mcp" });
+  const peer = await registerAgent(
+    base,
+    owner.humanToken,
+    { agentName: "peer", harness: "mcp" },
+    owner.boardId,
+  );
   const itemId = crypto.randomUUID();
   await postWork(base, owner.token, owner.boardId, {
     itemId,
@@ -145,7 +155,12 @@ test("agents send messages to each other and to a work item", async ({ app }) =>
     harness: "cli",
   });
 
-  const peer = await registerAgent(base, owner.token, { agentName: "peer", harness: "mcp" });
+  const peer = await registerAgent(
+    base,
+    owner.humanToken,
+    { agentName: "peer", harness: "mcp" },
+    owner.boardId,
+  );
   const itemId = crypto.randomUUID();
   await postWork(base, owner.token, owner.boardId, {
     itemId,

@@ -1,129 +1,155 @@
-import { Actor } from "@agent-board/domain";
-import { CurrentActor, Session, Unauthorized } from "@agent-board/domain";
-import * as Alchemy from "alchemy";
-import * as Clock from "effect/Clock";
-import * as Context from "effect/Context";
+import { RuntimeContext } from "alchemy";
+import {
+  AccountId,
+  AgentId,
+  BoardId,
+  CurrentActor,
+  Session,
+  Unauthorized,
+} from "@agent-board/domain";
 import * as Effect from "effect/Effect";
-import * as Base64Url from "effect/encoding/Base64Url";
-import * as Headers from "effect/http/Headers";
 import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Redacted from "effect/Redacted";
-import * as Result from "effect/Result";
-import * as Schema from "effect/Schema";
+import type * as Headers from "effect/http/Headers";
 
-/** The key that signs agent tokens. Created once per stage and kept in state. */
-export class SessionKey extends Context.Service<SessionKey, Effect.Effect<Redacted.Redacted>>()(
-  "AgentBoard/SessionKey",
-) {}
+import { BoardAuth, type BoardAuthService } from "./Auth.ts";
 
-/** A random signing key, made on the first dev or deploy of the stage. */
-export const SessionKeyLive = Layer.effect(
-  SessionKey,
+const headerValue = (headers: Readonly<Record<string, string | undefined>>, name: string) => {
+  const found = Object.entries(headers).find(([key]) => key.toLowerCase() === name);
+
+  return found?.[1];
+};
+
+const sessionToken = (headers: Readonly<Record<string, string | undefined>>) => {
+  const authorization = headerValue(headers, "authorization");
+
+  if (authorization !== undefined && authorization.toLowerCase().startsWith("bearer ")) {
+    const token = authorization.slice(7).trim();
+
+    if (token !== "") return token;
+  }
+
+  const cookie = headerValue(headers, "cookie") ?? "";
+  const pair = cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith("board_session="));
+
+  if (pair === undefined) return undefined;
+
+  const token = decodeURIComponent(pair.slice("board_session=".length));
+
+  return token === "" ? undefined : token;
+};
+
+interface AuthContext {
+  readonly internalAdapter: {
+    readonly findSession: (token: string) => Promise<{
+      readonly session: Record<string, unknown>;
+      readonly user: Record<string, unknown>;
+    } | null>;
+  };
+}
+
+const contextOf = (auth: BoardAuthService) =>
   Effect.gen(function* () {
-    const key = yield* Alchemy.Random("SessionKey");
+    const instance = yield* auth.auth;
 
-    return yield* key.text;
-  }),
-);
-
-const SESSION_MS = 365 * 24 * 60 * 60 * 1000;
-
-const Claims = Schema.fromJsonString(
-  Schema.Struct({
-    actor: Actor,
-    expires: Schema.Number,
-  }),
-);
-
-const hmacKey = Effect.fn(function* () {
-  const secret = Redacted.value(yield* yield* SessionKey);
-
-  return yield* Effect.promise(() =>
-    crypto.subtle.importKey(
-      "raw",
-      new TextEncoder().encode(secret),
-      { name: "HMAC", hash: "SHA-256" },
-      false,
-      ["sign", "verify"],
-    ),
-  );
-});
-
-/** A bearer token for an agent. The raw token is not written to the event log. */
-export const signSession = Effect.fn(function* (actor: Actor) {
-  const expires = (yield* Clock.currentTimeMillis) + SESSION_MS;
-  const json = yield* Schema.encodeEffect(Claims)({ actor, expires }).pipe(Effect.orDie);
-  const claims = Base64Url.encode(json);
-  const key = yield* hmacKey();
-
-  const mac = yield* Effect.promise(() =>
-    crypto.subtle.sign("HMAC", key, new TextEncoder().encode(claims)),
-  );
-
-  return `${claims}.${Base64Url.encode(new Uint8Array(mac))}`;
-});
-
-const verifySession = Effect.fn(function* (token: string) {
-  const [claims, mac, ...rest] = token.split(".");
-
-  if (claims === undefined || mac === undefined || rest.length > 0) return Option.none<Actor>();
-  const signature = Base64Url.decode(mac);
-
-  if (Result.isFailure(signature)) return Option.none<Actor>();
-  const key = yield* hmacKey();
-
-  const valid = yield* Effect.promise(() =>
-    crypto.subtle.verify(
-      "HMAC",
-      key,
-      new Uint8Array(signature.success),
-      new TextEncoder().encode(claims),
-    ),
-  );
-
-  const json = Base64Url.decodeString(claims);
-
-  if (!valid || Result.isFailure(json)) return Option.none<Actor>();
-  const decoded = yield* Schema.decodeEffect(Claims)(json.success).pipe(Effect.option);
-  const now = yield* Clock.currentTimeMillis;
-
-  return Option.flatMap(decoded, (claim) =>
-    claim.expires > now ? Option.some(claim.actor) : Option.none(),
-  );
-});
-
-const tokenOf = (headers: Headers.Headers): Option.Option<string> =>
-  Option.flatMap(Headers.get(headers, "authorization"), (value) =>
-    value.startsWith("Bearer ") ? Option.some(value.slice("Bearer ".length)) : Option.none(),
-  );
-
-/** The actor a request's bearer token names, when the token is valid. */
-export const actorFromHeaders = (headers: Headers.Headers) =>
-  Option.match(tokenOf(headers), {
-    onNone: () => Effect.succeed(Option.none<Actor>()),
-    onSome: (token) => verifySession(token),
+    return yield* Effect.promise(() => instance.$context as Promise<AuthContext>);
   });
 
-/** The {@link Session} middleware. */
+const actorFromSession = (
+  session: Record<string, unknown>,
+  user: Record<string, unknown>,
+  presented: string,
+) => {
+  const bound = typeof session.profile === "string" ? session.profile : "";
+
+  if (presented !== "" && presented !== bound) return undefined;
+
+  const profile = bound === "" ? undefined : bound;
+  const expiresAt = session.expiresAt;
+  const expires =
+    expiresAt instanceof Date
+      ? expiresAt.getTime()
+      : typeof expiresAt === "string" || typeof expiresAt === "number"
+        ? new Date(expiresAt).getTime()
+        : Number.POSITIVE_INFINITY;
+
+  if (expires <= Date.now()) return undefined;
+
+  if (session.kind === "agent") {
+    return {
+      _tag: "Agent" as const,
+      boardId: BoardId.make(typeof session.boardId === "string" ? session.boardId : ""),
+      agentId: AgentId.make(typeof session.agentId === "string" ? session.agentId : ""),
+      name: typeof session.agentName === "string" ? session.agentName : String(user.name ?? ""),
+      ...(profile === undefined ? {} : { profile }),
+    };
+  }
+
+  return {
+    _tag: "Human" as const,
+    accountId: AccountId.make(String(user.id ?? "")),
+    name: String(user.name ?? ""),
+    email: String(user.email ?? ""),
+    role: user.role === "owner" ? ("owner" as const) : ("member" as const),
+    ...(profile === undefined ? {} : { profile }),
+  };
+};
+
+/** The person or agent behind a bearer token, the board cookie, or the better-auth cookie. */
+export const resolveActor = (auth: BoardAuthService, headers: Headers.Headers) =>
+  Effect.gen(function* () {
+    const presented = headerValue(headers, "x-board-as") ?? "";
+    const token = sessionToken(headers);
+
+    if (token !== undefined) {
+      const context = yield* contextOf(auth);
+      const found = yield* Effect.promise(() => context.internalAdapter.findSession(token));
+
+      if (found !== null) {
+        const actor = actorFromSession(found.session, found.user, presented);
+
+        if (actor === undefined) return yield* new Unauthorized();
+
+        return actor;
+      }
+    }
+
+    const request = new globalThis.Headers();
+
+    for (const [key, value] of Object.entries(headers)) {
+      if (value !== undefined) request.set(key, value);
+    }
+
+    const session = yield* auth.getSession(request).pipe(Effect.orElseSucceed(() => null));
+
+    if (session === null) return yield* new Unauthorized();
+
+    const actor = actorFromSession(
+      session.session as unknown as Record<string, unknown>,
+      session.user as unknown as Record<string, unknown>,
+      presented,
+    );
+
+    if (actor === undefined) return yield* new Unauthorized();
+
+    return actor;
+  });
+
+/**
+ * Turns a better-auth session into the actor for one command.
+ * `x-board-as` is accepted only when it is the profile bound to that session.
+ */
 export const SessionLive = Layer.effect(
   Session,
   Effect.gen(function* () {
-    const key = yield* SessionKey;
+    const auth = yield* BoardAuth;
 
     return (effect, { headers }) =>
-      Option.match(tokenOf(headers), {
-        onNone: () => Effect.fail(new Unauthorized()),
-        onSome: (token) =>
-          verifySession(token).pipe(
-            Effect.provideService(SessionKey, key),
-            Effect.flatMap(
-              Option.match({
-                onNone: () => Effect.fail(new Unauthorized()),
-                onSome: (actor) => Effect.provideService(effect, CurrentActor, actor),
-              }),
-            ),
-          ),
-      });
+      resolveActor(auth, headers).pipe(
+        Effect.flatMap((actor) => effect.pipe(Effect.provideService(CurrentActor, actor))),
+        Effect.provide(RuntimeContext.phantom),
+      );
   }),
 );

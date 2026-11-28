@@ -1,21 +1,21 @@
 import {
   AgentBoard,
   AgentBoardPolicies,
-  AgentId,
   Board,
   BoardApi,
-  BoardId,
-  CurrentActor,
-  OpenBoard,
-  RegisterAgent,
-  Unauthorized,
+  Directory,
+  RegisterAccount,
+  TEAM,
 } from "@agent-board/domain";
-import * as DomainAi from "@alchemy.run/domain/Ai";
+import { AccountId } from "@agent-board/domain";
+import { CloudflareD1 } from "@alchemy.run/better-auth/CloudflareD1";
 import * as DomainCloudflare from "@alchemy.run/cloudflare/Domain";
 import * as DomainHttp from "@alchemy.run/domain/Http";
 import * as Cloudflare from "@alchemy.run/cloudflare";
-import * as Ai from "effect/ai";
+import { RuntimeContext } from "alchemy";
+import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
+import * as Redacted from "effect/Redacted";
 import * as FileSystem from "effect/FileSystem";
 import * as HttpApiBuilder from "effect/http-api/HttpApiBuilder";
 import * as Etag from "effect/http/Etag";
@@ -25,109 +25,32 @@ import * as Path from "effect/Path";
 import { HttpServerRequest } from "effect/http/HttpServerRequest";
 import * as HttpServerResponse from "effect/http/HttpServerResponse";
 import * as Layer from "effect/Layer";
-import * as Option from "effect/Option";
-import * as Schema from "effect/Schema";
 
+import { AuthLive, bindSignupAdmission, BoardAuth, seedOwner } from "./Auth.ts";
 import {
-  actorFromHeaders,
-  SessionKey,
-  SessionKeyLive,
-  SessionLive,
-  signSession,
-} from "./SessionLive.ts";
+  createInvite,
+  login,
+  mcp,
+  openBoard,
+  registerAgent,
+  revokeAgent,
+  signup,
+  tail,
+  waitFor,
+  WakeLive,
+} from "./routes.ts";
+import { SessionLive } from "./SessionLive.ts";
+
+const AuthDb = Cloudflare.D1.Database("AuthDb");
 
 const BoardLive = SessionLive.pipe(
-  Layer.provideMerge(SessionKeyLive),
   Layer.provideMerge(AgentBoard.layer(AgentBoardPolicies)),
+  Layer.provide(WakeLive),
   Layer.provide(DomainCloudflare.layerDurableObjects()),
 );
 
-const OpenBody = Schema.Struct({
-  title: Schema.String,
-  agentName: Schema.String,
-  harness: Schema.String,
-});
-
-const RegisterBody = Schema.Struct({
-  agentName: Schema.String,
-  harness: Schema.String,
-});
-
 const httpSurface = DomainHttp.toHttpApi(BoardApi);
 const httpApi = httpSurface.api.prefix("/api");
-
-const readJson = <A>(schema: Schema.Decoder<A>) =>
-  Effect.gen(function* () {
-    const request = yield* HttpServerRequest;
-
-    return yield* request.json.pipe(Effect.flatMap(Schema.decodeUnknownEffect(schema)));
-  });
-
-const failure = (error: { readonly _tag?: string }) =>
-  HttpServerResponse.json({ _tag: error._tag ?? "Error" }, { status: 422 });
-
-const openBoard = (boards: Effect.Success<typeof Board>, key: Effect.Success<typeof SessionKey>) =>
-  Effect.gen(function* () {
-    const body = yield* readJson(OpenBody);
-    const boardId = BoardId.make(crypto.randomUUID());
-    const agentId = AgentId.make(crypto.randomUUID());
-
-    yield* boards.send(
-      boardId,
-      new OpenBoard({
-        title: body.title,
-        agentId,
-        agentName: body.agentName,
-        harness: body.harness,
-      }),
-    );
-
-    const token = yield* signSession({ boardId, agentId }).pipe(
-      Effect.provideService(SessionKey, key),
-    );
-
-    return yield* HttpServerResponse.json({ boardId, agentId, token });
-  }).pipe(Effect.catch((error) => failure(error)));
-
-const registerAgent = (
-  boards: Effect.Success<typeof Board>,
-  key: Effect.Success<typeof SessionKey>,
-) =>
-  Effect.gen(function* () {
-    const request = yield* HttpServerRequest;
-    const body = yield* readJson(RegisterBody);
-
-    const actor = yield* actorFromHeaders(request.headers).pipe(
-      Effect.provideService(SessionKey, key),
-    );
-
-    if (Option.isNone(actor)) {
-      return yield* HttpServerResponse.json(new Unauthorized(), { status: 401 });
-    }
-
-    const agentId = AgentId.make(crypto.randomUUID());
-
-    yield* boards
-      .send(
-        actor.value.boardId,
-        new RegisterAgent({
-          agentId,
-          agentName: body.agentName,
-          harness: body.harness,
-        }),
-      )
-      .pipe(Effect.provideService(CurrentActor, actor.value));
-
-    const token = yield* signSession({ boardId: actor.value.boardId, agentId }).pipe(
-      Effect.provideService(SessionKey, key),
-    );
-
-    return yield* HttpServerResponse.json({
-      boardId: actor.value.boardId,
-      agentId,
-      token,
-    });
-  }).pipe(Effect.catch((error) => failure(error)));
 
 /**
  * The board Worker. Durable Objects come from the domain platform.
@@ -138,26 +61,38 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
   "agent-board",
   {
     main: import.meta.url,
-    dev: { host: "127.0.0.1", port: 8787, strictPort: true },
+    compatibility: { flags: ["nodejs_compat"] },
+    dev: { host: "127.0.0.1", port: 8788, strictPort: true },
+    workersDev: true,
   },
   Effect.gen(function* () {
     const api = yield* BoardApi;
     const boards = yield* Board;
-    const key = yield* SessionKey;
+    const directory = yield* Directory;
+    const auth = yield* BoardAuth;
 
-    const handleMcp = yield* DomainAi.toMcp(BoardApi).pipe(
-      Layer.provide(
-        Ai.McpServer.layerHttpRequestScoped({
-          name: "agent-board",
-          version: "0.0.0",
-          path: "/mcp",
-          protocols: [Ai.McpProtocol.v2026_07_28],
-        }),
+    bindSignupAdmission((input) =>
+      Effect.runPromise(
+        directory
+          .send(
+            TEAM,
+            new RegisterAccount({
+              accountId: AccountId.make(input.userId),
+              name: input.name,
+              email: input.email,
+              ...(input.invite === undefined ? {} : { invite: input.invite }),
+              ...(input.seed ? { seed: true } : {}),
+            }),
+          )
+          .pipe(
+            Effect.map((receipt) => receipt.reply.role),
+            Effect.mapError((error) => new Error(error._tag)),
+          ),
       ),
-      Layer.provide(BoardLive),
-      HttpRouter.toHttpEffect,
-      Effect.scoped,
-      Effect.orDie,
+    );
+
+    const ownerEmail = yield* Config.String("BOARD_OWNER_EMAIL").pipe(
+      Config.withDefault("owner@agent-board.test"),
     );
 
     const handleHttp = yield* HttpApiBuilder.layer(httpApi, { openapiPath: "/openapi.json" }).pipe(
@@ -173,6 +108,21 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
 
     return {
       fetch: Effect.gen(function* () {
+        const ownerPassword = yield* Config.Redacted("BOARD_OWNER_PASSWORD").pipe(
+          Effect.map((value) => Redacted.value(value).trim()),
+          Effect.flatMap((password) =>
+            password.length === 0
+              ? Effect.die(new Error("BOARD_OWNER_PASSWORD is required"))
+              : Effect.succeed(password),
+          ),
+          Effect.orDie,
+        );
+
+        yield* seedOwner(auth, {
+          email: ownerEmail,
+          name: "Owner",
+          password: ownerPassword,
+        }).pipe(Effect.orDie);
         const request = yield* HttpServerRequest;
         const path = new URL(request.url, "http://localhost").pathname;
 
@@ -180,17 +130,39 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
           return HttpServerResponse.jsonUnsafe({ ok: true });
         }
 
-        if (request.method === "POST" && path === "/boards") return yield* openBoard(boards, key);
+        if (request.method === "POST" && path === "/accounts") return yield* signup(auth);
+
+        if (request.method === "POST" && path === "/login") return yield* login(auth);
+
+        if (request.method === "POST" && path === "/invites")
+          return yield* createInvite(directory, auth);
+
+        if (request.method === "POST" && path === "/boards")
+          return yield* openBoard(boards, directory, auth);
 
         if (request.method === "POST" && path === "/agents")
-          return yield* registerAgent(boards, key);
+          return yield* registerAgent(boards, auth);
 
-        if (path === "/mcp" || path.startsWith("/mcp/")) return yield* handleMcp;
+        if (request.method === "POST" && path === "/agents/revoke")
+          return yield* revokeAgent(boards, auth);
+
+        if (request.method === "POST" && path === "/wait") return yield* waitFor(boards, auth);
+
+        if (request.method === "GET" && path === "/tail") return yield* tail(boards, auth);
+
+        if (path === "/api/auth" || path.startsWith("/api/auth/")) return yield* auth.fetch;
+
+        if (path === "/mcp" || path.startsWith("/mcp/")) return yield* mcp(boards, auth);
 
         if (path === "/api" || path.startsWith("/api/")) return yield* handleHttp;
 
         return yield* api.fetch;
       }),
     };
-  }).pipe(Effect.provide(BoardLive)),
+  }).pipe(
+    Effect.provide(BoardLive),
+    Effect.provide(AuthLive),
+    Effect.provide(CloudflareD1(AuthDb)),
+    Effect.provide(RuntimeContext.phantom),
+  ),
 ) {}
