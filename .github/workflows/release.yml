@@ -160,12 +160,19 @@ jobs:
             node_modules/**/*.tsx
             node_modules/**/*.mts
             node_modules/**/*.cts
-            # Node loads these Alchemy subpaths as TypeScript, and the TanStack
-            # Start Vite plugin loads these entries while it builds the site.
+            # Node loads Alchemy's runtime bootstrap as TypeScript. The Worker
+            # bundler resolves the `worker` export condition, which points
+            # `@alchemy.run/cloudflare/Bridge` and `@alchemy.run/better-auth/*`
+            # at TypeScript sources. The generated entry imports Bridge.
             !node_modules/**/alchemy/src/Runtime/Bootstrap.ts
             !node_modules/**/alchemy/src/Runtime/ManagedHttpShutdown.ts
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**
-            !node_modules/**/@alchemy.run/cloudflare/src/Bootstrap/**/*.ts
+            !node_modules/**/@alchemy.run/cloudflare/src/**
+            !node_modules/**/@alchemy.run/cloudflare/src/**/*.ts
+            !node_modules/**/@alchemy.run/cloudflare/src/**/*.tsx
+            !node_modules/**/@alchemy.run/better-auth/src/**
+            !node_modules/**/@alchemy.run/better-auth/src/**/*.ts
+            !node_modules/**/@alchemy.run/better-auth/src/**/*.tsx
+            # The TanStack Start Vite plugin loads these entries while it builds the site.
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.ts
             !node_modules/**/@tanstack/react-start/dist/plugin/default-entry/**/*.tsx
