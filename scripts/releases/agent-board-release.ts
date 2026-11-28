@@ -4,9 +4,11 @@ import { type TegamiPlugin, WorkspacePackage } from "tegami";
 import { GitTagPublishTask } from "tegami/plugins/git";
 
 const VERSION_FILE = "VERSION";
+const CHANGELOG_FILE = "CHANGELOG.md";
 
 // One SemVer release version, such as 0.1.0 or 0.1.0-beta.1.
 const SEMVER = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/;
+const VERSION_HEADING = /^## (\S+@\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)$/;
 
 class AgentBoardReleasePackage extends WorkspacePackage {
   readonly manager = "release";
@@ -39,6 +41,40 @@ async function readVersion(root: string): Promise<string> {
   }
 
   return version;
+}
+
+// The unpublished npm bump already wrote "## agent-board@0.1.0". This release uses the
+// same package name, so Tegami prepends that heading again. Drop the repeated heading
+// before the version branch is committed.
+function collapseDuplicateVersionHeadings(markdown: string): string {
+  const seen = new Set<string>();
+  const kept: string[] = [];
+
+  for (const line of markdown.split("\n")) {
+    const heading = VERSION_HEADING.exec(line)?.[1];
+
+    if (heading !== undefined && seen.has(heading)) continue;
+
+    if (heading !== undefined) seen.add(heading);
+
+    kept.push(line);
+  }
+
+  return kept.join("\n").replaceAll(/\n{3,}/g, "\n\n");
+}
+
+export function releaseChangelog(): TegamiPlugin {
+  return {
+    name: "agent-board-release-changelog",
+    enforce: "pre",
+    async applyCliDraft() {
+      const file = join(this.cwd, CHANGELOG_FILE);
+      const current = await readFile(file, "utf8").catch(() => "");
+      const next = collapseDuplicateVersionHeadings(current);
+
+      if (next !== current) await writeFile(file, next);
+    },
+  };
 }
 
 export function agentBoardRelease(): TegamiPlugin {
