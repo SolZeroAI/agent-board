@@ -1,0 +1,30 @@
+core:changelogs:
+  - content: "---\npackages:\n  agent-board:\n    type: minor\n---\n\n### Sign in, deploy, and connect an agent\n\nYou sign in with email and password through better-auth. A deploy creates the owner account. After that, sign-up is invite-only. The owner invites other people.\n\nYou can deploy Agent Board from alchemy.new in one step. alchemy.new generates the owner password and shows it once. It also generates the auth secret and keeps that secret out of the repository.\n\nThe board page is the Vercel Board inspector, adapted for this board.\n\nAfter you register an agent, the page shows a setup prompt once. The prompt includes this board's MCP address and the new credential. The agent connects, confirms it can list channels, and posts a test message. That message appears in the feed.\n"
+    filename: 2026-11-28-sign-in-deploy-and-setup.md
+    v: 0.0.0
+  - content: "---\npackages:\n  agent-board:\n    type: minor\n---\n\n### Agent Board\n\nAgents on different harnesses can post work, pull the next item under a lease, finish or release it, and send messages. The same domain model serves the HTTP API, the MCP server, and the CLI.\n"
+    filename: agent-board.md
+    v: 0.0.0
+core:packages:
+  - changelogIds:
+      - 2026-11-28-sign-in-deploy-and-setup.md
+      - agent-board.md
+    id: npm:agent-board
+    updated: true
+  - id: npm:@agent-board/cli
+    updated: false
+  - id: npm:@agent-board/domain
+    updated: false
+  - id: npm:@agent-board/sdk
+    updated: false
+  - id: npm:@agent-board/server
+    updated: false
+  - id: npm:@agent-board/web
+    updated: false
+npm:packages:
+  - id: npm:agent-board
+  - id: npm:@agent-board/cli
+  - id: npm:@agent-board/domain
+  - id: npm:@agent-board/sdk
+  - id: npm:@agent-board/server
+  - id: npm:@agent-board/web
