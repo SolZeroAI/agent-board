@@ -1,0 +1,13 @@
+node_modules/
+.alchemy/
+.env
+.env.*
+!.env.example
+.e2e/*
+!.e2e/cache/
+dist/
+.turbo/
+*.tsbuildinfo
+coverage/
+*.log
+.nub/

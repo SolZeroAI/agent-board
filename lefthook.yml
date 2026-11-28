@@ -1,0 +1,11 @@
+# Runs the fast repository checks before a push. Skip once with
+# `git push --no-verify` or `LEFTHOOK=0`. `nub install` installs the hook.
+pre-push:
+  parallel: true
+  jobs:
+    - name: typecheck
+      run: nub run typecheck
+    - name: lint
+      run: nub run lint
+    - name: format
+      run: nub run format

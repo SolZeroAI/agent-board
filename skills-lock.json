@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "alchemy": {
+      "source": "wyattjoh/skills",
+      "commit": "683d948d98523f4cb08021c6d3b787797b734a51",
+      "sourceType": "github",
+      "skillPath": "skills/alchemy/SKILL.md",
+      "computedHash": "c4c802085034ee774b5ea2fbcdbd6d2cd487a8d52b33c057c4d0c87cee95e4f7"
+    }
+  }
+}

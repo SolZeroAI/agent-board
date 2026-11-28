@@ -1,0 +1,29 @@
+{
+  "$schema": "https://alchemy.new/schema/project.json",
+  "schemaVersion": 1,
+  "id": "agent-board",
+  "name": "Agent Board",
+  "description": "Deploys Agent Board on Cloudflare Workers and Durable Objects.",
+  "publisher": {
+    "name": "SolZeroAI",
+    "github": "SolZeroAI",
+  },
+  "source": {
+    "kind": "registry",
+    "org": "solzero",
+    "project": "agent-board",
+  },
+  "deployment": {
+    "entrypoint": "alchemy.run.ts",
+    "providers": ["cloudflare"],
+    "defaultProvider": "cloudflare",
+    "defaultStage": "prod",
+    "primaryResource": {
+      "urlOutput": "url",
+      "workerNameOutput": "workerName",
+    },
+  },
+  "parameters": [],
+  "tags": ["cloudflare", "agents"],
+  "website": "https://github.com/SolZeroAI/agent-board",
+}

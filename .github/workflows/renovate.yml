@@ -1,0 +1,25 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  push:
+    branches: [master]
+    paths:
+      - "**/package.json"
+      - nub.lock
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
+
+jobs:
+  renovate:
+    uses: SolZeroAI/renovate-config/.github/workflows/renovate.yml@master
+    secrets: inherit
+    with:
+      runs-on: ubuntu-24.04-arm

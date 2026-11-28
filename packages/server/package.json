@@ -1,0 +1,20 @@
+{
+  "name": "@agent-board/server",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "exports": {
+    ".": "./src/BoardWorker.ts"
+  },
+  "scripts": {
+    "typecheck": "tsrs --pretty false --noEmit --incremental false"
+  },
+  "dependencies": {
+    "@agent-board/domain": "workspace:*",
+    "@alchemy.run/cloudflare": "2.0.0-beta.85",
+    "@alchemy.run/domain": "2.0.0-beta.85",
+    "alchemy": "2.0.0-beta.85",
+    "effect": "4.1.2"
+  }
+}

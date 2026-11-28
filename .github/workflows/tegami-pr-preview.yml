@@ -1,0 +1,20 @@
+name: Tegami PR Preview
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tegami-pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event.pull_request.draft == false
+    uses: SolZeroAI/.github/.github/workflows/tegami-pr-preview.yml@master
+    with:
+      runs-on: '"ubuntu-24.04-arm"'

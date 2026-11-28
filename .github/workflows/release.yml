@@ -1,0 +1,146 @@
+name: Release
+
+on:
+  workflow_run:
+    workflows: [Validate]
+    types: [completed]
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.event_name == 'workflow_run' && startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && '-publish' || '' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  release:
+    name: Version or release Agent Board
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
+      (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      published: ${{ steps.published.outputs.published }}
+      tag: ${{ steps.published.outputs.tag }}
+      version: ${{ steps.published.outputs.version }}
+      sha: ${{ steps.published.outputs.sha }}
+    steps:
+      - name: Create release app token
+        id: release-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+
+      - name: Check out validated commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          token: ${{ steps.release-token.outputs.token }}
+
+      - name: Set up Nub
+        uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.10.0
+          node-version-file: .nvmrc
+          cache-dependency-path: nub.lock
+
+      - name: Install dependencies
+        run: nub install --frozen-lockfile
+
+      - name: Skip publish when the version tag exists
+        id: published
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_COMMIT: ${{ startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && github.event.workflow_run.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com' }}
+        run: |
+          set -euo pipefail
+          version="$(tr -d '[:space:]' < VERSION)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          if [ "$RELEASE_COMMIT" = "true" ] && [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && ! gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/v${version}" >/dev/null 2>&1; then
+            {
+              echo "tag=v${version}"
+              echo "version=${version}"
+              echo "published=true"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Version or publish release
+        run: |
+          if [ "$RELEASE_COMMIT" = "true" ]; then
+            nub run tegami ci
+          else
+            nub run tegami version --no-checks
+          fi
+        env:
+          GITHUB_TOKEN: ${{ steps.release-token.outputs.token }}
+          RELEASE_COMMIT: ${{ startsWith(github.event.workflow_run.head_commit.message, 'Version Packages') && github.event.workflow_run.head_commit.author.email == '341870119+solzero-bot[bot]@users.noreply.github.com' }}
+
+  # Confirmed publish contract. The trusted publisher has no workflow file,
+  # so any workflow on master can publish. This is the only publish job.
+  # It uses the alchemy-new environment, the same as solstatus.
+  # registry-url: https://alchemy.new (api.alchemy.new does not serve the API)
+  # OIDC audience: https://alchemy.new/registry/publish
+  # OIDC issuer: https://token.actions.githubusercontent.com
+  # Exchange: POST https://alchemy.new/v1/oidc/github/exchange
+  publish:
+    name: Publish to alchemy.new
+    needs: release
+    if: >-
+      github.ref == 'refs/heads/master' &&
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'master' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      needs.release.outputs.published == 'true' &&
+      needs.release.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: alchemy-new
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out release commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.release.outputs.sha }}
+
+      - name: Set up Nub
+        uses: nubjs/setup-nub@v0
+        with:
+          nub-version: 0.10.0
+          node-version-file: .nvmrc
+          cache-dependency-path: nub.lock
+
+      - name: Install, build, and prune production dependencies
+        env:
+          NPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE: "false"
+        run: |
+          nub install --frozen-lockfile
+          nub run build
+          nub prune --prod
+
+      - name: Publish to alchemy.new
+        uses: SolZeroAI/alchemy-new-publish-action@v1
+        with:
+          registry-url: https://alchemy.new
+          version: ${{ needs.release.outputs.version }}
+          path: .
+          manifest: alchemy.new.jsonc
