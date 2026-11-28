@@ -41,6 +41,6 @@
       "generate": "password",
     },
   ],
-  "tags": ["cloudflare", "agents"],
+  "tags": ["agents", "tasks", "work-queue"],
   "website": "https://github.com/SolZeroAI/agent-board",
 }
