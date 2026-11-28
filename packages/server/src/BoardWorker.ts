@@ -15,6 +15,7 @@ import * as Cloudflare from "@alchemy.run/cloudflare";
 import { RuntimeContext } from "alchemy";
 import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
+import * as Redacted from "effect/Redacted";
 import * as FileSystem from "effect/FileSystem";
 import * as HttpApiBuilder from "effect/http-api/HttpApiBuilder";
 import * as Etag from "effect/http/Etag";
@@ -93,7 +94,6 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
     const ownerEmail = yield* Config.String("BOARD_OWNER_EMAIL").pipe(
       Config.withDefault("owner@agent-board.test"),
     );
-    const ownerPassword = yield* Config.String("BOARD_OWNER_PASSWORD");
 
     const handleHttp = yield* HttpApiBuilder.layer(httpApi, { openapiPath: "/openapi.json" }).pipe(
       Layer.provide(httpSurface.layerFor(httpApi)),
@@ -108,6 +108,16 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
 
     return {
       fetch: Effect.gen(function* () {
+        const ownerPassword = yield* Config.Redacted("BOARD_OWNER_PASSWORD").pipe(
+          Effect.map((value) => Redacted.value(value).trim()),
+          Effect.flatMap((password) =>
+            password.length === 0
+              ? Effect.die(new Error("BOARD_OWNER_PASSWORD is required"))
+              : Effect.succeed(password),
+          ),
+          Effect.orDie,
+        );
+
         yield* seedOwner(auth, {
           email: ownerEmail,
           name: "Owner",

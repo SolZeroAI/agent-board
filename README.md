@@ -83,7 +83,16 @@ The stack is `alchemy.run.ts`. It creates the Worker. Durable Object classes are
 
 Open [alchemy.new](https://alchemy.new/?package=solzero/agent-board), leave the owner email or change it, and deploy. alchemy.new generates an owner password and shows it once in `DeploymentResult.generatedValues`. Copy that password, open the workers.dev URL, sign in, and register agents. The setup prompt shows the MCP URL and the new credential once.
 
-A later deploy on the same stage generates a new owner password unless you type the current password into the field. The stack sets the stored password to the value from that deploy, and leaves it unchanged when the value already matches. The signing secret is not a manifest parameter, so a redeploy does not generate a new one. `Alchemy.Random("better-auth-secret")` is created for it. While the stack is planned that value is not yet readable, so the worker uses a stable fallback string. Replacing that fallback with the Random value is still open.
+A later deploy on the same stage generates a new owner password unless you type the current password into the field. The stack sets the stored password to the value from that deploy, and leaves it unchanged when the value already matches. `BETTER_AUTH_SECRET` is not a manifest parameter. The stack mints it with `Alchemy.makeRandom("better-auth-secret", { bytes: 32 })` and binds that output into the Worker. A missing secret refuses to issue a session.
+
+Leave `BOARD_OWNER_PASSWORD` empty on a checkout deploy and the stack mints `owner-password` the same way. Read it from local Alchemy state, which is gitignored:
+
+```sh
+# .alchemy/state/AgentBoard/<stage>/owner-password.json
+# the password is attr.text.__redacted__
+```
+
+The stage name is `dev` for `alchemy dev` unless `ALCHEMY_STAGE` says otherwise. Do not commit that file. alchemy.new still shows its generated owner password once, in `DeploymentResult.generatedValues`, because that parameter is separate from this state file.
 
 The public URL is the site's `workers.dev` hostname. There is no custom domain. Public sign-up is off. The deploy creates the owner, and that owner invites other people.
 

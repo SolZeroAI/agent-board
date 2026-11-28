@@ -1,8 +1,8 @@
 import { BetterAuth, type BetterAuthInstance } from "@alchemy.run/better-auth";
-import * as Alchemy from "alchemy";
 import { APIError } from "better-auth/api";
 import { hashPassword, verifyPassword } from "better-auth/crypto";
 import { bearer } from "better-auth/plugins";
+import * as Config from "effect/Config";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -84,7 +84,16 @@ const withAdmission = async <A>(next: PendingAdmission, body: () => Promise<A>) 
   }
 };
 
-const boardAuth = (secret: string) =>
+const signingSecret = Config.Redacted("BETTER_AUTH_SECRET").pipe(
+  Effect.flatMap((secret) =>
+    Redacted.value(secret).trim().length === 0
+      ? Effect.die(new Error("BETTER_AUTH_SECRET is required"))
+      : Effect.succeed(secret),
+  ),
+  Effect.orDie,
+);
+
+const boardAuth = (secret: typeof signingSecret) =>
   BetterAuth({
     ...authOptions,
     secret,
@@ -137,20 +146,14 @@ const boardAuth = (secret: string) =>
     },
   });
 
-/** The signing secret is Alchemy.Random, stable in stage state. */
+/**
+ * The signing secret is the `BETTER_AUTH_SECRET` binding. The stack mints it
+ * with `Alchemy.makeRandom` and binds the output. A missing value fails here,
+ * before a session can be issued.
+ */
 export const AuthLive = Layer.unwrap(
   Effect.gen(function* () {
-    const signing = yield* Alchemy.Random("better-auth-secret", { bytes: 32 });
-    const read = yield* signing.text;
-    const revealed =
-      read !== undefined && Redacted.isRedacted(read) ? Redacted.value(read) : undefined;
-    const secret =
-      typeof read === "string"
-        ? read
-        : typeof revealed === "string"
-          ? revealed
-          : "board-auth-secret-dev-only-32chars-ok";
-    const auth = yield* boardAuth(secret);
+    const auth = yield* boardAuth(signingSecret);
 
     return Layer.succeed(BoardAuth, auth as unknown as BoardAuthService);
   }),
