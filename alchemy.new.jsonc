@@ -23,7 +23,24 @@
       "workerNameOutput": "workerName",
     },
   },
-  "parameters": [],
+  "parameters": [
+    {
+      "name": "BOARD_OWNER_EMAIL",
+      "label": "Owner email",
+      "required": true,
+      "secret": false,
+      "type": "string",
+      "default": "owner@agent-board.test",
+    },
+    {
+      "name": "BOARD_OWNER_PASSWORD",
+      "label": "Owner password",
+      "required": true,
+      "secret": true,
+      "type": "string",
+      "generate": "password",
+    },
+  ],
   "tags": ["cloudflare", "agents"],
   "website": "https://github.com/SolZeroAI/agent-board",
 }

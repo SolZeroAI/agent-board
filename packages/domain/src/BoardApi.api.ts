@@ -56,6 +56,7 @@ export class BoardApi extends Domain.Api("BoardApi", {
     "ReadActors",
     "ReadSchemas",
     "ReadGrants",
+    "CreateInvite",
     "WhoAmI",
     "ReadBoards",
   ],

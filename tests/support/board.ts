@@ -4,6 +4,7 @@ export interface OpenedAgent {
   readonly boardId: string;
   readonly agentId: string;
   readonly token: string;
+  readonly humanToken?: string;
 }
 
 export interface WorkItem {
@@ -49,8 +50,10 @@ const Messages = Schema.Struct({
 const decode = <A>(schema: Schema.Decoder<A>, text: string): A =>
   Schema.decodeUnknownSync(schema)(JSON.parse(text));
 
-const post = async (url: string, body: unknown, token?: string) => {
-  const headers = new Headers({ "content-type": "application/json" });
+const post = async (url: string, body: unknown, token?: string, extra?: Headers) => {
+  const headers = extra ?? new Headers();
+
+  headers.set("content-type", "application/json");
 
   if (token !== undefined) headers.set("authorization", `Bearer ${token}`);
 
@@ -89,10 +92,61 @@ const AccountBody = Schema.Struct({
 
 const BoardBody = Schema.Struct({ boardId: Schema.String });
 
+const ownerCredentials = {
+  name: "Owner",
+  email: "owner@agent-board.test",
+  password: "owner-pass-1",
+};
+
+let ownerToken: string | undefined;
+
+const rawSignup = (
+  baseUrl: string,
+  input: { name: string; email: string; password: string },
+  invite?: string,
+) => {
+  const headers = new Headers();
+
+  if (invite !== undefined) headers.set("x-board-invite", invite);
+
+  return post(`${baseUrl}/accounts`, input, undefined, headers);
+};
+
+const ensureOwner = async (baseUrl: string) => {
+  if (ownerToken !== undefined) return ownerToken;
+
+  try {
+    ownerToken = decode(AccountBody, await post(`${baseUrl}/login`, ownerCredentials)).token;
+  } catch {
+    ownerToken = decode(AccountBody, await rawSignup(baseUrl, ownerCredentials)).token;
+  }
+
+  return ownerToken;
+};
+
 export const signup = async (
   baseUrl: string,
   input: { name: string; email: string; password: string },
-): Promise<Account> => decode(AccountBody, await post(`${baseUrl}/accounts`, input));
+): Promise<Account> => {
+  if (input.email === ownerCredentials.email) {
+    try {
+      const created = decode(AccountBody, await rawSignup(baseUrl, input));
+      ownerToken = created.token;
+
+      return created;
+    } catch {
+      const existing = decode(AccountBody, await post(`${baseUrl}/login`, input));
+      ownerToken = existing.token;
+
+      return existing;
+    }
+  }
+
+  const token = await ensureOwner(baseUrl);
+  const invite = JSON.parse(await post(`${baseUrl}/invites`, {}, token)) as { code: string };
+
+  return decode(AccountBody, await rawSignup(baseUrl, input, invite.code));
+};
 
 export const login = async (
   baseUrl: string,
@@ -105,7 +159,7 @@ export const createBoard = async (baseUrl: string, token: string, title: string)
 export const openBoard = async (
   baseUrl: string,
   input: { title: string; agentName: string; harness: string },
-): Promise<OpenedAgent> => {
+): Promise<OpenedAgent & { readonly humanToken: string }> => {
   const human = await signup(baseUrl, {
     name: input.agentName,
     email: `${crypto.randomUUID()}@example.test`,
@@ -113,7 +167,9 @@ export const openBoard = async (
   });
   const board = await createBoard(baseUrl, human.token, input.title);
 
-  return registerAgent(baseUrl, human.token, input, board.boardId);
+  const agent = await registerAgent(baseUrl, human.token, input, board.boardId);
+
+  return { ...agent, humanToken: human.token };
 };
 
 export const registerAgent = async (

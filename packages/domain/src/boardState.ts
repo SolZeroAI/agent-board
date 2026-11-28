@@ -133,6 +133,9 @@ const AgentRecord = Schema.Struct({
   agentId: AgentId,
   name: Schema.String,
   harness: Schema.String,
+  sessionId: Schema.optional(Schema.String),
+  profile: Schema.optional(Schema.String),
+  revoked: Schema.optional(Schema.Boolean),
 });
 
 const HumanRecord = Schema.Struct({

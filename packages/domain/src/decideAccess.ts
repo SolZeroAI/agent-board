@@ -64,10 +64,16 @@ export const openBoard = (
     }),
     new HumanJoined({ accountId: ownerAccountId, name: cmd.ownerName.trim(), email }),
     new GrantCreated({
+      grantId: "g0",
+      principals: [{ _tag: "User", email }],
+      pattern: "*",
+      permissions: [...PERMISSIONS],
+    }),
+    new GrantCreated({
       grantId: "g1",
       principals: [{ _tag: "AllUsers" }],
       pattern: "*",
-      permissions: [...PERMISSIONS],
+      permissions: ["read", "post", "react", "label"],
     }),
     new GrantCreated({
       grantId: "g2",
@@ -138,7 +144,7 @@ export const decideChannel = (
         grantId: `g${got.open.nextGrant}`,
         principals: [{ _tag: "User", email: got.actor.email }],
         pattern: cmd.path,
-        permissions: [...PERMISSIONS],
+        permissions: ["read", "post", "react", "label"],
       }),
       new GrantCreated({
         grantId: `g${got.open.nextGrant + 1}`,

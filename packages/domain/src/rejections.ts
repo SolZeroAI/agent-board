@@ -46,8 +46,8 @@ export class InvalidLease extends Domain.Rejection(
 /** The email is already registered. */
 export class AccountExists extends Domain.Rejection("AccountExists", {}, conflict) {}
 
-/** The email or password does not match an account. */
-export class BadCredentials extends Domain.Rejection("BadCredentials", {}, forbidden) {}
+/** A later sign-up needs an invite from the team owner. */
+export class InviteRequired extends Domain.Rejection("InviteRequired", {}, forbidden) {}
 
 /** A password must be at least 8 characters. */
 export class WeakPassword extends Domain.Rejection("WeakPassword", {}, bad) {}

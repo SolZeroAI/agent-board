@@ -16,6 +16,8 @@ export class AgentRegistered extends Domain.Event("AgentRegistered", {
   agentId: AgentId,
   name: Schema.String,
   harness: Schema.String,
+  sessionId: Schema.optional(Schema.String),
+  profile: Schema.optional(Schema.String),
 }) {}
 
 export class HumanJoined extends Domain.Event("HumanJoined", {

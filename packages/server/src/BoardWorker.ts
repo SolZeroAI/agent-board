@@ -1,9 +1,19 @@
-import { AgentBoard, AgentBoardPolicies, Board, BoardApi, Directory } from "@agent-board/domain";
-import * as DomainAi from "@alchemy.run/domain/Ai";
+import {
+  AgentBoard,
+  AgentBoardPolicies,
+  Board,
+  BoardApi,
+  Directory,
+  RegisterAccount,
+  TEAM,
+} from "@agent-board/domain";
+import { AccountId } from "@agent-board/domain";
+import { CloudflareD1 } from "@alchemy.run/better-auth/CloudflareD1";
 import * as DomainCloudflare from "@alchemy.run/cloudflare/Domain";
 import * as DomainHttp from "@alchemy.run/domain/Http";
 import * as Cloudflare from "@alchemy.run/cloudflare";
-import * as Ai from "effect/ai";
+import { RuntimeContext } from "alchemy";
+import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as FileSystem from "effect/FileSystem";
 import * as HttpApiBuilder from "effect/http-api/HttpApiBuilder";
@@ -15,20 +25,24 @@ import { HttpServerRequest } from "effect/http/HttpServerRequest";
 import * as HttpServerResponse from "effect/http/HttpServerResponse";
 import * as Layer from "effect/Layer";
 
+import { AuthLive, bindSignupAdmission, BoardAuth, seedOwner } from "./Auth.ts";
 import {
-  inspect,
+  createInvite,
   login,
+  mcp,
   openBoard,
   registerAgent,
+  revokeAgent,
   signup,
   tail,
   waitFor,
   WakeLive,
 } from "./routes.ts";
-import { SessionKey, SessionKeyLive, SessionLive } from "./SessionLive.ts";
+import { SessionLive } from "./SessionLive.ts";
+
+const AuthDb = Cloudflare.D1.Database("AuthDb");
 
 const BoardLive = SessionLive.pipe(
-  Layer.provideMerge(SessionKeyLive),
   Layer.provideMerge(AgentBoard.layer(AgentBoardPolicies)),
   Layer.provide(WakeLive),
   Layer.provide(DomainCloudflare.layerDurableObjects()),
@@ -46,28 +60,40 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
   "agent-board",
   {
     main: import.meta.url,
-    dev: { host: "127.0.0.1", port: 8787, strictPort: true },
+    compatibility: { flags: ["nodejs_compat"] },
+    dev: { host: "127.0.0.1", port: 8788, strictPort: true },
+    workersDev: true,
   },
   Effect.gen(function* () {
     const api = yield* BoardApi;
     const boards = yield* Board;
     const directory = yield* Directory;
-    const key = yield* SessionKey;
+    const auth = yield* BoardAuth;
 
-    const handleMcp = yield* DomainAi.toMcp(BoardApi).pipe(
-      Layer.provide(
-        Ai.McpServer.layerHttpRequestScoped({
-          name: "agent-board",
-          version: "0.0.0",
-          path: "/mcp",
-          protocols: [Ai.McpProtocol.v2026_07_28],
-        }),
+    bindSignupAdmission((input) =>
+      Effect.runPromise(
+        directory
+          .send(
+            TEAM,
+            new RegisterAccount({
+              accountId: AccountId.make(input.userId),
+              name: input.name,
+              email: input.email,
+              ...(input.invite === undefined ? {} : { invite: input.invite }),
+              ...(input.seed ? { seed: true } : {}),
+            }),
+          )
+          .pipe(
+            Effect.map((receipt) => receipt.reply.role),
+            Effect.mapError((error) => new Error(error._tag)),
+          ),
       ),
-      Layer.provide(BoardLive),
-      HttpRouter.toHttpEffect,
-      Effect.scoped,
-      Effect.orDie,
     );
+
+    const ownerEmail = yield* Config.String("BOARD_OWNER_EMAIL").pipe(
+      Config.withDefault("owner@agent-board.test"),
+    );
+    const ownerPassword = yield* Config.String("BOARD_OWNER_PASSWORD");
 
     const handleHttp = yield* HttpApiBuilder.layer(httpApi, { openapiPath: "/openapi.json" }).pipe(
       Layer.provide(httpSurface.layerFor(httpApi)),
@@ -82,6 +108,11 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
 
     return {
       fetch: Effect.gen(function* () {
+        yield* seedOwner(auth, {
+          email: ownerEmail,
+          name: "Owner",
+          password: ownerPassword,
+        }).pipe(Effect.orDie);
         const request = yield* HttpServerRequest;
         const path = new URL(request.url, "http://localhost").pathname;
 
@@ -89,28 +120,39 @@ export default class BoardWorker extends Cloudflare.Worker<BoardWorker>()(
           return HttpServerResponse.jsonUnsafe({ ok: true });
         }
 
-        if (request.method === "POST" && path === "/accounts") return yield* signup(directory, key);
+        if (request.method === "POST" && path === "/accounts") return yield* signup(auth);
 
-        if (request.method === "POST" && path === "/login") return yield* login(directory, key);
+        if (request.method === "POST" && path === "/login") return yield* login(auth);
+
+        if (request.method === "POST" && path === "/invites")
+          return yield* createInvite(directory, auth);
 
         if (request.method === "POST" && path === "/boards")
-          return yield* openBoard(boards, directory, key);
+          return yield* openBoard(boards, directory, auth);
 
         if (request.method === "POST" && path === "/agents")
-          return yield* registerAgent(boards, key);
+          return yield* registerAgent(boards, auth);
 
-        if (request.method === "POST" && path === "/wait") return yield* waitFor(boards, key);
+        if (request.method === "POST" && path === "/agents/revoke")
+          return yield* revokeAgent(boards, auth);
 
-        if (request.method === "GET" && path === "/tail") return yield* tail(boards, key);
+        if (request.method === "POST" && path === "/wait") return yield* waitFor(boards, auth);
 
-        if (request.method === "GET" && path === "/inspect") return inspect();
+        if (request.method === "GET" && path === "/tail") return yield* tail(boards, auth);
 
-        if (path === "/mcp" || path.startsWith("/mcp/")) return yield* handleMcp;
+        if (path === "/api/auth" || path.startsWith("/api/auth/")) return yield* auth.fetch;
+
+        if (path === "/mcp" || path.startsWith("/mcp/")) return yield* mcp(boards, auth);
 
         if (path === "/api" || path.startsWith("/api/")) return yield* handleHttp;
 
         return yield* api.fetch;
       }),
     };
-  }).pipe(Effect.provide(BoardLive)),
+  }).pipe(
+    Effect.provide(BoardLive),
+    Effect.provide(AuthLive),
+    Effect.provide(CloudflareD1(AuthDb)),
+    Effect.provide(RuntimeContext.phantom),
+  ),
 ) {}

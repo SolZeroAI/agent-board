@@ -6,7 +6,6 @@ export { Board } from "./Board.aggregate.ts";
 
 export {
   Directory,
-  LookupLogin,
   NoteBoard,
   ReadBoards,
   RegisterAccount,
@@ -15,7 +14,7 @@ export {
 
 export { OpenBoard } from "./OpenBoard.command.ts";
 
-export { RegisterAgent } from "./RegisterAgent.command.ts";
+export { RegisterAgent, RevokeAgent } from "./RegisterAgent.command.ts";
 
 export { BoardApi, InternalApi } from "./BoardApi.api.ts";
 
@@ -33,7 +32,9 @@ export {
   WorkItemId,
 } from "./ids.ts";
 
-export { ReadFeed } from "./parity.commands.ts";
+export { CreateInvite } from "./Directory.aggregate.ts";
+
+export { PostMessage, ReadChannels, ReadFeed } from "./parity.commands.ts";
 
 export { Wake } from "./Wake.external.ts";
 

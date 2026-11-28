@@ -93,6 +93,7 @@ import { PostWork, WorkPosted } from "./PostWork.command.ts";
 import {
   AgentExists,
   BoardClosed,
+  Forbidden,
   InvalidLease,
   InvalidMessage,
   InvalidWork,
@@ -115,7 +116,7 @@ import {
   replyTasks,
   replyThread,
 } from "./replyParity.ts";
-import { RegisterAgent } from "./RegisterAgent.command.ts";
+import { AgentRevoked, RegisterAgent, RevokeAgent } from "./RegisterAgent.command.ts";
 import { MessageSent, SendMessage } from "./SendMessage.command.ts";
 import { PublicWorkItem } from "./WorkItem.ts";
 
@@ -163,7 +164,9 @@ const opened = (
 ): Open | BoardClosed | NotMember => {
   if (state._tag !== "Open") return new BoardClosed();
 
-  if (state.agents[actorId] === undefined) return new NotMember();
+  if (state.agents[actorId] === undefined || state.agents[actorId]?.revoked === true) {
+    return new NotMember();
+  }
 
   return state;
 };
@@ -255,6 +258,7 @@ export class Board extends Domain.Aggregate("Board", {
     Parity.ReadActors,
     Parity.ReadSchemas,
     Parity.ReadGrants,
+    RevokeAgent,
   ],
   decide: {
     OpenBoard: (state, cmd) => openBoard(state, cmd),
@@ -262,15 +266,16 @@ export class Board extends Domain.Aggregate("Board", {
       const actor = yield* CurrentActor;
 
       if (state._tag !== "Open") return yield* new BoardClosed();
-      const agent = asAgent(actor, ctx.id);
 
-      if (actor._tag === "Agent" && agent === undefined) return yield* new NotMember();
+      if (actor._tag !== "Human") return yield* new NotMember();
 
-      if (actor._tag === "Human" && allowed(state, actor, "general", "post") !== undefined) {
-        return yield* new NotMember();
+      if (allowed(state, actor, "general", "manage") !== undefined) {
+        return yield* new Forbidden({ action: "manage" });
       }
 
-      if (blank(cmd.agentName) || blank(cmd.harness)) return yield* new InvalidWork();
+      if (blank(cmd.agentName) || blank(cmd.harness) || blank(cmd.sessionId)) {
+        return yield* new InvalidWork();
+      }
 
       if (state.agents[cmd.agentId] !== undefined) return yield* new AgentExists();
 
@@ -279,8 +284,27 @@ export class Board extends Domain.Aggregate("Board", {
           agentId: cmd.agentId,
           name: cmd.agentName.trim(),
           harness: cmd.harness.trim(),
+          sessionId: cmd.sessionId,
+          ...(cmd.profile === undefined ? {} : { profile: cmd.profile }),
         }),
       ];
+    }),
+    RevokeAgent: Effect.fn(function* (state, cmd) {
+      const actor = yield* CurrentActor;
+
+      if (state._tag !== "Open") return yield* new BoardClosed();
+
+      if (actor._tag !== "Human") return yield* new NotMember();
+
+      if (allowed(state, actor, "general", "manage") !== undefined) {
+        return yield* new Forbidden({ action: "manage" });
+      }
+
+      const record = state.agents[cmd.agentId];
+
+      if (record === undefined || record.revoked === true) return yield* new UnknownAgent();
+
+      return [new AgentRevoked({ agentId: cmd.agentId, sessionId: record.sessionId ?? "" })];
     }),
     PostWork: Effect.fn(function* (state, cmd, ctx) {
       const actor = yield* CurrentActor;
@@ -560,7 +584,20 @@ export class Board extends Domain.Aggregate("Board", {
                 agentId: event.agentId,
                 name: event.name,
                 harness: event.harness,
+                ...(event.sessionId === undefined ? {} : { sessionId: event.sessionId }),
+                ...(event.profile === undefined ? {} : { profile: event.profile }),
+                revoked: false,
               },
+            },
+          }
+        : state,
+    AgentRevoked: (state, event) =>
+      state._tag === "Open" && state.agents[event.agentId] !== undefined
+        ? {
+            ...state,
+            agents: {
+              ...state.agents,
+              [event.agentId]: { ...state.agents[event.agentId]!, revoked: true },
             },
           }
         : state,
@@ -708,6 +745,18 @@ export class Board extends Domain.Aggregate("Board", {
           registered !== undefined && registered._tag === "AgentRegistered"
             ? registered.agentId
             : AgentId.make("missing"),
+      };
+    },
+    RevokeAgent: (_state, events) => {
+      const revoked = events.find((event) => event._tag === "AgentRevoked");
+
+      return {
+        agentId:
+          revoked !== undefined && revoked._tag === "AgentRevoked"
+            ? revoked.agentId
+            : AgentId.make("missing"),
+        sessionId:
+          revoked !== undefined && revoked._tag === "AgentRevoked" ? revoked.sessionId : "",
       };
     },
     PostWork: (_state, events) => {

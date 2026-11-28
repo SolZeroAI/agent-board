@@ -5,8 +5,7 @@ import * as Schema from "effect/Schema";
 import type { Actor } from "./Actor.ts";
 import { CurrentActor } from "./CurrentActor.ts";
 import { AccountId, BoardId, DirectoryId } from "./ids.ts";
-import { sameSecret } from "./password.ts";
-import { AccountExists, BadCredentials, InvalidWork, WeakPassword } from "./rejections.ts";
+import { AccountExists, Forbidden, InvalidWork, InviteRequired } from "./rejections.ts";
 import { Session } from "./Session.ts";
 import { blank } from "./text.ts";
 
@@ -14,7 +13,6 @@ const Account = Schema.Struct({
   accountId: AccountId,
   name: Schema.String,
   email: Schema.String,
-  passwordHash: Schema.String,
   role: Schema.Literals(["owner", "member"]),
 });
 
@@ -24,9 +22,15 @@ const BoardRef = Schema.Struct({
   ownerId: AccountId,
 });
 
+const Invite = Schema.Struct({
+  code: Schema.String,
+  used: Schema.Boolean,
+});
+
 const State = Schema.Struct({
   accounts: Schema.Record(Schema.String, Account),
   boards: Schema.Record(Schema.String, BoardRef),
+  invites: Schema.optional(Schema.Record(Schema.String, Invite)),
 });
 
 type State = typeof State.Type;
@@ -35,7 +39,6 @@ export class AccountRegistered extends Domain.Event("AccountRegistered", {
   accountId: AccountId,
   name: Schema.String,
   email: Schema.String,
-  passwordHash: Schema.String,
   role: Schema.Literals(["owner", "member"]),
 }) {}
 
@@ -45,12 +48,9 @@ export class BoardNoted extends Domain.Event("BoardNoted", {
   ownerId: AccountId,
 }) {}
 
-export class AccountAuthenticated extends Domain.Event("AccountAuthenticated", {
-  accountId: AccountId,
-  name: Schema.String,
-  email: Schema.String,
-  role: Schema.Literals(["owner", "member"]),
-}) {}
+export class InviteCreated extends Domain.Event("InviteCreated", { code: Schema.String }) {}
+
+export class InviteConsumed extends Domain.Event("InviteConsumed", { code: Schema.String }) {}
 
 export class IdentityRead extends Domain.Event("IdentityRead", {
   kind: Schema.Literals(["human", "agent"]),
@@ -64,17 +64,21 @@ export class IdentityRead extends Domain.Event("IdentityRead", {
 
 const emailOf = (value: string) => value.trim().toLowerCase();
 
-/** Create a human account. The first account is the team owner. */
+/**
+ * The deploy seeds the owner. Later accounts need an invite from that owner.
+ * Passwords live in better-auth, not here.
+ */
 export class RegisterAccount extends Domain.Command("RegisterAccount", {
   target: DirectoryId,
   input: {
     accountId: AccountId,
     name: Schema.String,
     email: Schema.String,
-    passwordHash: Schema.String,
+    invite: Schema.optional(Schema.String),
+    seed: Schema.optional(Schema.Boolean),
   },
-  events: [AccountRegistered],
-  rejects: [AccountExists, WeakPassword, InvalidWork],
+  events: [AccountRegistered, InviteConsumed],
+  rejects: [AccountExists, InviteRequired, InvalidWork],
   reply: {
     accountId: AccountId,
     name: Schema.String,
@@ -83,35 +87,14 @@ export class RegisterAccount extends Domain.Command("RegisterAccount", {
   },
 }) {}
 
-export class LoginLookedUp extends Domain.Event("LoginLookedUp", { email: Schema.String }) {}
-
-/** Load an account so the Worker can check a password. Not on the public Api. */
-export class LookupLogin extends Domain.Command("LookupLogin", {
+/** The team owner invites the next person. */
+export class CreateInvite extends Domain.Command("CreateInvite", {
   target: DirectoryId,
-  input: { email: Schema.String },
-  events: [LoginLookedUp],
-  rejects: [BadCredentials],
-  reply: {
-    accountId: AccountId,
-    name: Schema.String,
-    email: Schema.String,
-    role: Schema.Literals(["owner", "member"]),
-    passwordHash: Schema.String,
-  },
-}) {}
-
-/** Check a password hash and return the account. The password is not recorded. */
-export class Authenticate extends Domain.Command("Authenticate", {
-  target: DirectoryId,
-  input: { email: Schema.String, passwordHash: Schema.String },
-  events: [AccountAuthenticated],
-  rejects: [BadCredentials],
-  reply: {
-    accountId: AccountId,
-    name: Schema.String,
-    email: Schema.String,
-    role: Schema.Literals(["owner", "member"]),
-  },
+  middleware: [Session],
+  input: { code: Schema.String },
+  events: [InviteCreated],
+  rejects: [Forbidden, InvalidWork],
+  reply: { code: Schema.String },
 }) {}
 
 /** Remember a board so people can list the ones on this team. */
@@ -175,66 +158,60 @@ const described = (actor: Actor) =>
         ...(actor.profile === undefined ? {} : { profile: actor.profile }),
       });
 
-/**
- * The team: accounts, the boards they have opened, and who is calling.
- * Password hashes stay here and never appear on a board's feed.
- */
+/** The team directory. Passwords live in better-auth, not here. */
 export class Directory extends Domain.Aggregate("Directory", {
   id: DirectoryId,
   state: State,
-  initial: { accounts: {}, boards: {} },
-  commands: [RegisterAccount, LookupLogin, Authenticate, NoteBoard, WhoAmI, ReadBoards],
+  initial: { accounts: {}, boards: {}, invites: {} },
+  commands: [RegisterAccount, CreateInvite, NoteBoard, WhoAmI, ReadBoards],
   decide: {
-    RegisterAccount: (state, cmd) =>
-      Effect.gen(function* () {
-        const email = emailOf(cmd.email);
+    RegisterAccount: (state, cmd) => {
+      const email = emailOf(cmd.email);
 
-        if (blank(cmd.name) || !email.includes("@")) return yield* new InvalidWork();
+      if (blank(cmd.name) || !email.includes("@")) return new InvalidWork();
 
-        if (cmd.passwordHash.length < 8) return yield* new WeakPassword();
+      if (Object.values(state.accounts).some((account) => account.email === email)) {
+        return new AccountExists();
+      }
 
-        if (Object.values(state.accounts).some((account) => account.email === email)) {
-          return yield* new AccountExists();
-        }
+      const first = Object.keys(state.accounts).length === 0;
 
+      if (cmd.seed === true || first) {
         return [
           new AccountRegistered({
             accountId: cmd.accountId,
             name: cmd.name.trim(),
             email,
-            passwordHash: cmd.passwordHash,
-            role: Object.keys(state.accounts).length === 0 ? "owner" : "member",
+            role: "owner",
           }),
         ];
-      }),
-    LookupLogin: (state, cmd) => {
-      const email = emailOf(cmd.email);
-
-      if (!Object.values(state.accounts).some((account) => account.email === email)) {
-        return new BadCredentials();
       }
 
-      return [new LoginLookedUp({ email })];
+      const invites = state.invites ?? {};
+      const invite = cmd.invite === undefined ? undefined : invites[cmd.invite];
+
+      if (invite === undefined || invite.used) return new InviteRequired();
+
+      return [
+        new InviteConsumed({ code: invite.code }),
+        new AccountRegistered({
+          accountId: cmd.accountId,
+          name: cmd.name.trim(),
+          email,
+          role: "member",
+        }),
+      ];
     },
-    Authenticate: (state, cmd) =>
-      Effect.gen(function* () {
-        const email = emailOf(cmd.email);
-        const account = Object.values(state.accounts).find((item) => item.email === email);
+    CreateInvite: Effect.fn(function* (state, cmd) {
+      const actor = yield* CurrentActor;
 
-        if (account === undefined) return yield* new BadCredentials();
-        const matches = sameSecret(cmd.passwordHash, account.passwordHash);
+      if (actor._tag !== "Human" || actor.role !== "owner")
+        return yield* new Forbidden({ action: "manage" });
 
-        if (!matches) return yield* new BadCredentials();
+      if (blank(cmd.code)) return yield* new InvalidWork();
 
-        return [
-          new AccountAuthenticated({
-            accountId: account.accountId,
-            name: account.name,
-            email: account.email,
-            role: account.role,
-          }),
-        ];
-      }),
+      return [new InviteCreated({ code: cmd.code.trim() })];
+    }),
     NoteBoard: (state, cmd) => {
       if (state.boards[cmd.boardId] !== undefined) return [];
 
@@ -257,9 +234,19 @@ export class Directory extends Domain.Aggregate("Directory", {
           accountId: event.accountId,
           name: event.name,
           email: event.email,
-          passwordHash: event.passwordHash,
           role: event.role,
         },
+      },
+    }),
+    InviteCreated: (state, event) => ({
+      ...state,
+      invites: { ...state.invites, [event.code]: { code: event.code, used: false } },
+    }),
+    InviteConsumed: (state, event) => ({
+      ...state,
+      invites: {
+        ...state.invites,
+        [event.code]: { code: event.code, used: true },
       },
     }),
     BoardNoted: (state, event) => ({
@@ -274,22 +261,18 @@ export class Directory extends Domain.Aggregate("Directory", {
       },
     }),
     IdentityRead: (state) => state,
-    LoginLookedUp: (state) => state,
     BoardsListed: (state) => state,
-    AccountAuthenticated: (state) => state,
   },
   reply: {
-    RegisterAccount: (state, events) => {
+    RegisterAccount: (_state, events) => {
       const registered = events.find((event) => event._tag === "AccountRegistered");
 
       if (registered === undefined || registered._tag !== "AccountRegistered") {
-        const account = Object.values(state.accounts)[0];
-
         return {
-          accountId: account?.accountId ?? AccountId.make("missing"),
-          name: account?.name ?? "",
-          email: account?.email ?? "",
-          role: account?.role ?? "member",
+          accountId: AccountId.make("missing"),
+          name: "",
+          email: "",
+          role: "member" as const,
         };
       }
 
@@ -300,38 +283,9 @@ export class Directory extends Domain.Aggregate("Directory", {
         role: registered.role,
       };
     },
-    LookupLogin: (state, events) => {
-      const found = events.find((event) => event._tag === "LoginLookedUp");
-      const email = found !== undefined && found._tag === "LoginLookedUp" ? found.email : "";
-      const account = Object.values(state.accounts).find((item) => item.email === email);
-
-      return {
-        accountId: account?.accountId ?? AccountId.make("missing"),
-        name: account?.name ?? "",
-        email: account?.email ?? "",
-        role: account?.role ?? "member",
-        passwordHash: account?.passwordHash ?? "",
-      };
-    },
-    Authenticate: (_state, events) => {
-      const found = events.find((event) => event._tag === "AccountAuthenticated");
-
-      if (found === undefined || found._tag !== "AccountAuthenticated") {
-        return {
-          accountId: AccountId.make("missing"),
-          name: "",
-          email: "",
-          role: "member" as const,
-        };
-      }
-
-      return {
-        accountId: found.accountId,
-        name: found.name,
-        email: found.email,
-        role: found.role,
-      };
-    },
+    CreateInvite: (_state, events) => ({
+      code: events.find((event) => event._tag === "InviteCreated")?.code ?? "",
+    }),
     ReadBoards: (state) => ({
       boards: Object.values(state.boards),
     }),

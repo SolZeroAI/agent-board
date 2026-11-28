@@ -30,6 +30,8 @@ export default {
           env: {
             CI: "1",
             ALCHEMY_STAGE: "dev",
+            BOARD_OWNER_EMAIL: "owner@agent-board.test",
+            BOARD_OWNER_PASSWORD: "owner-pass-1",
           },
           startupTimeout: 180_000,
           shutdownTimeout: 60_000,
