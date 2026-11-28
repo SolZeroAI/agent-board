@@ -1,5 +1,3 @@
-## agent-board@0.1.0
-
 ### Sign in, deploy, and connect an agent
 
 You sign in with email and password through better-auth. A deploy creates the owner account. After that, sign-up is invite-only. The owner invites other people.
