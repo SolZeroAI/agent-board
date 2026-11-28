@@ -30,4 +30,6 @@ Use `nub run test:e2e:list` to see the collected tests. Feature notes in `featur
 
 ## Evidence
 
-Keep logs under `.e2e/` locally. Copy the run log and `.e2e` reports you need to share into the cloud-agent artifact directory. Do not commit them. Commit `.e2e/cache/` only when an action replay changed.
+Keep logs under `.e2e/` locally. Copy the run log and `.e2e` reports you need to share into the cloud-agent artifact directory. Do not commit them.
+
+Action replay recordings in `.e2e/cache` are committed, and CI replays them with `--strict-cache`. Before you mark a pull request ready for review, re-record if you changed an `agent.act` step or the UI one drives: run `gh workflow run validate.yml --ref <branch> -f e2e_record=true`, wait for it to pass, and pull the recordings commit it pushes to your branch. Without CI access, run `nub run test` locally and commit the changed recordings.

@@ -250,6 +250,13 @@ lines you changed:
 - `.e2e/` is output (`report.json`, `results/`, `cache/`, `logs/`; the
   config's `output` moves the report and artifacts, never `cache/` or the
   app's log). Read it, never edit it.
+- Action replay recordings in `.e2e/cache` are committed, and CI replays them
+  with `--strict-cache`. Before you mark a pull request ready for review,
+  re-record if you changed an `agent.act` step or the UI one drives: run
+  `gh workflow run validate.yml --ref <branch> -f e2e_record=true`, wait for
+  it to pass, and pull the recordings commit it pushes to your branch.
+  Without CI access, run `nub run test` locally and commit the changed
+  recordings. Do not commit other `.e2e/` output.
 
 ## Feedback
 

@@ -20,7 +20,7 @@ Write for someone who will run an agent against the board. Name the command, the
 
 `nub run test` runs the e2e suite. Read `.agents/skills/e2e/SKILL.md` and `.agents/skills/verify-agent-board/SKILL.md` before changing tests. Feature coverage is `features/*.md`.
 
-Re-record action replays before marking a pull request ready when an `agent.act` step or the UI it drives changed. This suite drives HTTP, so most changes do not record browser actions. Commit `.e2e/cache/` when a recording changes. Do not commit other `.e2e/` output.
+Action replay recordings in `.e2e/cache` are committed, and CI replays them with `--strict-cache`. Before you mark a pull request ready for review, re-record if you changed an `agent.act` step or the UI one drives: run `gh workflow run validate.yml --ref <branch> -f e2e_record=true`, wait for it to pass, and pull the recordings commit it pushes to your branch. Without CI access, run `nub run test` locally and commit the changed recordings. Do not commit other `.e2e/` output.
 
 ## Pull requests
 
